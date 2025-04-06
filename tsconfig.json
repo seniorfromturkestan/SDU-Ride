@@ -1,0 +1,18 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "paths": {
+      "@/*": [
+        "./*"
+      ]
+    }
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts",
+    "nativewind-env.d.ts"
+, "components/BurgerMenu.jsx", "app/(tabs)/_layout.jsx", "app/(tabs)/bus.jsx", "app/(tabs)/bushtaxi.jsx", "app/(tabs)/home.jsx", "app/(tabs)/profile.jsx", "app/_layout.jsx", "app/+not-found.jsx", "app/menu.jsx", "components/Collapsible.jsx", "components/CustomText.tsx"  ]
+}
