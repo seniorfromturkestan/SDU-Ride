@@ -5,7 +5,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Menuburger from '@/assets/images/menuburger.svg';
 import PlusIcon from '@/assets/images/Plus.svg';
 import CustomText from '@/components/CustomText';
-import BurgerMenu from '@/components/BurgerMenu';
+import BurgerMenu from '@/components/BurgerMenu'; 
 
 
 const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
@@ -73,13 +73,13 @@ const HomeScreen = () => {
 
   return (
     <SafeAreaView className='flex-1 bg-[#f1f1f1] font-Montserrat' style={{ flex: 1 }}>
-      <StatusBar barStyle="light-content" />      
-      <View className='bg-[#716DAA] h-[130px] p-4 -mt-20 pt-20'>
+      <StatusBar barStyle="auto" />      
+      <View className='bg-[#716DAA] h-[130px] p-4 -mt-20 pt-20 shadow-md'>
         <View className='flex-row justify-between items-center' >
           <TouchableOpacity>
               <Image source={icons.iconride} className='w-36 h-16' resizeMode='contain'/>
           </TouchableOpacity>
-          <TouchableOpacity isVisible={isMenuVisible} onPress={toggleMenu}>
+          <TouchableOpacity isVisible={isMenuVisible} onPress={toggleMenu} className='mr-2'>
             <Menuburger width={24} height={24} />
           </TouchableOpacity>
         </View>
@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     backgroundColor: 'rgba(0,0,0,0.5)',
-    zIndex: 99,
+    zIndex: 1,
   }
 });
 
