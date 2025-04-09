@@ -6,6 +6,8 @@ import Menuburger from '@/assets/images/menuburger.svg';
 import PlusIcon from '@/assets/images/Plus.svg';
 import CustomText from '@/components/CustomText';
 import BurgerMenu from '@/components/BurgerMenu'; 
+import NewsSlider from '@/components/NewsSlider';
+
 
 
 const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
@@ -20,14 +22,36 @@ const icons = {
   iconride: require('@/assets/images/iconride.png')
 };
 
+const slides = [
+  {
+    id: '1',
+    text: 'SDU делает важный шаг на пути к улучшению качества образования',
+    image: require('@/assets/images/sdunews.jpg'),
+  },
+  {
+    id: '2',
+    text: 'Университет принял международных гостей',
+    image: require('@/assets/images/sdunews.jpg'),
+  },
+  {
+    id: '3',
+    text: 'Объявлены новые гранты для студентов',
+    image: require('@/assets/images/sdunews.jpg'),
+  },
+];
+
+
 const HomeScreen = () => {
   const [isMenuVisible, setMenuVisible] = useState(false);
+
+
+  
 
   const toggleMenu = () => {
     setMenuVisible(!isMenuVisible);
   };
 
-  const gradientColors = ['#B74E00', '#D9631D', '#F39C12', '#FFD700']
+  const gradientColors = ['#B74E00', '#D9631D', '#F39C12', '#F1C40F'];
   // const gradientColors = ['#20B2AA', '#48D1CC', '#00CED1', '#5F9EA0']
   const colorAnimation = useRef(new Animated.Value(0)).current;
   const startAnimation = () => {
@@ -42,6 +66,14 @@ const HomeScreen = () => {
     });
   };
   
+  useEffect(() => {
+    if (isMenuVisible) {
+      StatusBar.setBarStyle('dark-content');
+    } else {
+      StatusBar.setBarStyle('light-content');
+    }
+  }, [isMenuVisible]);
+
   useEffect(() => {
     startAnimation();
     return () => {
@@ -73,7 +105,7 @@ const HomeScreen = () => {
 
   return (
     <SafeAreaView className='flex-1 bg-[#f1f1f1] font-Montserrat' style={{ flex: 1 }}>
-      <StatusBar barStyle="auto" />      
+      <StatusBar barStyle="light-content" />      
       <View className='bg-[#716DAA] h-[130px] p-4 -mt-20 pt-20 shadow-md'>
         <View className='flex-row justify-between items-center' >
           <TouchableOpacity>
@@ -94,7 +126,7 @@ const HomeScreen = () => {
         />
       )}
 
- 
+
       
       <ScrollView className='flex-1'>
         
@@ -136,11 +168,14 @@ const HomeScreen = () => {
             </View>
           </AnimatedLinearGradient>
         </View>
+
+        <NewsSlider slides={slides} />
+
         {[
           { icon: icons.ticket, label: "Мои билеты" },
           { icon: icons.history, label: "История поездок" },
         ].map((item, index) => (
-          <TouchableOpacity key={index} className="mx-4 mt-4 bg-white rounded-[20] p-3 shadow-custom">
+          <TouchableOpacity key={index} className="mx-4 mt-3 bg-white rounded-[20] p-3 shadow-custom">
             <View className="flex-row items-center">
               <View className='bg-[#EBEBEB] w-12 h-12 rounded-full mr-2 pt-1 items-center justify-center'>
                 <Image source={item.icon} className="w-9 h-9 p-[1px]" resizeMode="contain" />
@@ -151,8 +186,8 @@ const HomeScreen = () => {
         ))}
 
         
-        <View className='mx-4 mt-6'>
-            <CustomText className='text-xl font mb-3'>Оплата &#8659;</CustomText>
+        <View className='mx-4 mt-4'>
+            <CustomText className='text-xl font-semibold mb-3'>Оплата &#8659;</CustomText>
             <View className="flex-row gap-3">
             {[
               { icon: icons.bluetooth, label: "Bluetooth" },
@@ -170,7 +205,7 @@ const HomeScreen = () => {
         </View>
         
         <TouchableOpacity 
-          className='mx-4 mt-10 mb-4 bg-[#716DAA] rounded-[20] p-4 items-center'
+          className='mx-4 mt-6 mb-4 bg-[#716DAA] rounded-[20] p-4 items-center'
         >
           <CustomText className='text-white text-2xl font-bold'>жду автобус</CustomText>
         </TouchableOpacity>

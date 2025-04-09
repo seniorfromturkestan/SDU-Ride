@@ -28,6 +28,8 @@ const BurgerMenu = ({ isVisible, onClose, activeItem = '' }) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
 
+  
+
   useEffect(() => {
     if (isVisible) {
       Animated.parallel([
@@ -82,7 +84,7 @@ const BurgerMenu = ({ isVisible, onClose, activeItem = '' }) => {
     ]}
     >
       <View style={styles.header}>
-        <TouchableOpacity className='flex mr-auto -mt-4'>
+        <TouchableOpacity className='flex mr-auto -ml-2 -mt-4'>
               <Image source={icons1.iconride} className='w-36 h-16' resizeMode='contain'/>
           </TouchableOpacity>
         <TouchableOpacity onPress={onClose} className='-mt-3 -mr-1'>
