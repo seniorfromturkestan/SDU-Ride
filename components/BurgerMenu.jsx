@@ -2,6 +2,10 @@ import React, { useState, useRef, useEffect } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet, Image, Animated, Easing } from 'react-native';
 import { StatusBar } from 'react-native';
 import Menuburger from '@/assets/images/menuburgerPurple.svg';
+import AdminSlidesScreen from '@/components/AdminSlideScreen';
+import { useNavigation } from '@react-navigation/native';
+
+
 
 
 const icons = {
@@ -10,6 +14,7 @@ const icons = {
   'Обращение': require('@/assets/images/mailBurger.png'),
   'Контакт-центр': require('@/assets/images/phoneBurger.png'),
   'О приложении': require('@/assets/images/aboutUsBurger.png'),
+  'Админ-панель': require('@/assets/images/aboutUsBurger.png'),
 };
 
 const icons1 = {
@@ -26,9 +31,7 @@ const BurgerMenu = ({ isVisible, onClose, activeItem = '' }) => {
   const [selectedItem, setSelectedItem] = useState(activeItem);
   const slideAnim = useRef(new Animated.Value(300)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
-
-
-  
+  const navigation = useNavigation();
 
   useEffect(() => {
     if (isVisible) {
@@ -65,12 +68,14 @@ const BurgerMenu = ({ isVisible, onClose, activeItem = '' }) => {
   if (!isVisible && fadeAnim.__getValue() === 0) return null;
 
   const menuItems = [
-    'Расписание',
-    'Новости SDU',
-    'Обращение',
-    'Контакт-центр',
-    'О приложении',
+    { label: 'Расписание', screen: 'ScheduleScreen' },
+    { label: 'Новости SDU', screen: 'NewsScreen' },
+    { label: 'Обращение', screen: 'FeedbackScreen' },
+    { label: 'Контакт-центр', screen: 'ContactScreen' },
+    { label: 'О приложении', screen: 'AboutScreen' },
+    { label: 'Админ-панель', screen: 'AdminSlides' },
   ];
+  
 
   return (
     <Animated.View
@@ -91,33 +96,41 @@ const BurgerMenu = ({ isVisible, onClose, activeItem = '' }) => {
           <Menuburger name="close"width={24} height={24} color="#716DAA"/>
         </TouchableOpacity>
       </View>
-
-      {menuItems.map((title, index) => (
+      {menuItems.map((item, index) => (
         <TouchableOpacity
           key={index}
           style={[
             styles.menuItem,
-            selectedItem === title && styles.activeItem,
+            selectedItem === item.label && styles.activeItem,
           ]}
           onPress={() => {
-            setSelectedItem(title);
+            setSelectedItem(item.label);
             onClose();
+            navigation.navigate(item.screen);
           }}
         >
-            
-            <View className='bg-[#EBEBEB] w-12 h-12 rounded-full mr-4 items-center justify-center'>
-                <Image source={icons[title]} style={styles.icon} />
-            </View>
+          {icons[item.label] && (
+            <Image
+              source={icons[item.label]}
+              style={styles.icon}
+              className="mr-5"
+            />
+          )}
           <Text
             style={[
               styles.menuText,
-              selectedItem === title && { color: '#716DAA', fontWeight: 'bold' },
+              selectedItem === item.label && { color: '#716DAA', fontWeight: 'bold' },
             ]}
           >
-            {title}
+            {item.label}
           </Text>
         </TouchableOpacity>
       ))}
+
+
+
+
+      
     </Animated.View>
   );
 };
@@ -138,7 +151,6 @@ const styles = StyleSheet.create({
         shadowRadius: 5,
         elevation: 6,
         zIndex: 100,
-        fontFamily:"Montserrat",
     },
       
   header: {
