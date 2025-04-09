@@ -8,6 +8,8 @@ import { View } from "react-native";
 import { useRouter } from "expo-router";
 import { useFonts } from "expo-font";
 import StartScreen from "@/components/StartScreen";
+import AdminSlidesScreen from "@/components/AdminSlideScreen";
+
 
 SplashScreen.preventAutoHideAsync();
 
@@ -52,6 +54,8 @@ export default function RootLayout() {
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="+not-found" />
+          {/* <Stack.Screen name="AdminSlides" component={AdminSlidesScreen} /> */}
+
         </Stack>
       </View>
     </ThemeProvider>

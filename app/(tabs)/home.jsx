@@ -7,6 +7,8 @@ import PlusIcon from '@/assets/images/Plus.svg';
 import CustomText from '@/components/CustomText';
 import BurgerMenu from '@/components/BurgerMenu'; 
 import NewsSlider from '@/components/NewsSlider';
+import { Entypo } from '@expo/vector-icons';
+
 
 
 
@@ -38,15 +40,25 @@ const slides = [
     text: 'Объявлены новые гранты для студентов',
     image: require('@/assets/images/sdunews.jpg'),
   },
+  {
+    id: '4',
+    text: 'Объявлены новые гранты для студентов',
+    image: require('@/assets/images/sdunews.jpg'),
+  },{
+    id: '5',
+    text: 'Объявлены новые гранты для студентов',
+    image: require('@/assets/images/sdunews.jpg'),
+  },
 ];
 
 
 const HomeScreen = () => {
   const [isMenuVisible, setMenuVisible] = useState(false);
-
-
+  const user = {
+    id:210103146,
+    balance: '120'
+  }
   
-
   const toggleMenu = () => {
     setMenuVisible(!isMenuVisible);
   };
@@ -141,16 +153,14 @@ const HomeScreen = () => {
             <View className="p-4">
               <View className="flex-row justify-between items-center">
                 <View className="flex-row items-center">
-                    <View className='bg-[#EBEBEB] w-12 h-12 rounded-full mr-2 items-center justify-center'>
-                      <Image source={icons.cards} className="w-10 h-10 mr-1" />
-                    </View>
+                      <Image source={icons.cards} className="w-10 h-10 mr-3" />
                     <View>
                       <CustomText className="text-2xl font-bold text-white">Virtual Card</CustomText>
-                      <CustomText className="text-sm font-semibold text-white">210103146</CustomText>
+                      <CustomText className="text-sm font-semibold text-white">{user.id}</CustomText>
                     </View>
                 </View>
                 <View className="flex-row items-center">
-                  <CustomText className="text-3xl font-bold text-white mr-2">0,00 ₸</CustomText>
+                  <CustomText className="text-3xl font-bold text-white mr-2">{user.balance} ₸</CustomText>
                   <TouchableOpacity className="bg-[#716DAA] w-6 h-6 rounded-lg items-center justify-center">
                     <PlusIcon width={12} height={15} fill="#FFFFFF" />
                   </TouchableOpacity>
@@ -161,7 +171,8 @@ const HomeScreen = () => {
 
               <View className="flex-row justify-between items-center">
                 <TouchableOpacity className="flex-row items-center">
-                  <CustomText className="text-md text-white">Подробнее &#8658;</CustomText>
+                  <CustomText className="text-md text-white">Подробнее</CustomText>
+                  <Entypo name="chevron-small-right" size={24} color="white"/>
                 </TouchableOpacity>
                 <CustomText className="text-white text-lg font-bold">KZT</CustomText>
               </View>
@@ -175,11 +186,9 @@ const HomeScreen = () => {
           { icon: icons.ticket, label: "Мои билеты" },
           { icon: icons.history, label: "История поездок" },
         ].map((item, index) => (
-          <TouchableOpacity key={index} className="mx-4 mt-3 bg-white rounded-[20] p-3 shadow-custom">
+          <TouchableOpacity key={index} className="mx-4 mt-3 bg-white rounded-[20] p-4 shadow-custom">
             <View className="flex-row items-center">
-              <View className='bg-[#EBEBEB] w-12 h-12 rounded-full mr-2 pt-1 items-center justify-center'>
-                <Image source={item.icon} className="w-9 h-9 p-[1px]" resizeMode="contain" />
-              </View>
+                <Image source={item.icon} className="w-9 h-9 mr-3" resizeMode="contain" />
               <CustomText className="text-xl">{item.label}</CustomText>
             </View>
           </TouchableOpacity>
@@ -187,7 +196,12 @@ const HomeScreen = () => {
 
         
         <View className='mx-4 mt-4'>
-            <CustomText className='text-xl font-semibold mb-3'>Оплата &#8659;</CustomText>
+        <View className='flex-row items-center mb-3'>
+          <CustomText className='text-xl font-semibold'>Оплата</CustomText>
+          <Entypo name="chevron-small-down" size={24} color="black"/>
+        </View>
+
+          
             <View className="flex-row gap-3">
             {[
               { icon: icons.bluetooth, label: "Bluetooth" },
@@ -195,10 +209,8 @@ const HomeScreen = () => {
               { icon: icons.bus, label: "Гос.номер" },
             ].map((item, index) => (
               <TouchableOpacity key={index} className="flex-1 bg-white rounded-[20] p-4 items-center shadow-custom">
-                 <View className='bg-[#EBEBEB] w-12 h-12 rounded-full mr-2 items-center justify-center'>
                   <Image source={item.icon} className="w-10 h-8" resizeMode="contain" />
-                </View>
-                <CustomText className="text-lg">{item.label}</CustomText>
+                <CustomText className="text-lg mt-1">{item.label}</CustomText>
               </TouchableOpacity>
             ))}
           </View>
