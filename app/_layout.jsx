@@ -7,8 +7,7 @@ import "../global.css";
 import { View } from "react-native";
 import { useRouter } from "expo-router";
 import { useFonts } from "expo-font";
-import SplashLoader from "@/components/SplashLoader";
-import LanguageSelect from "@/components/LanguageSelect";
+import StartScreen from "@/components/StartScreen";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -16,49 +15,35 @@ export default function RootLayout() {
   const router = useRouter();
   const [language, setLanguage] = useState(null);
   const [appReady, setAppReady] = useState(false);
-  const [showSplashImage, setShowSplashImage] = useState(true);
 
-  useFonts({
+  const [fontsLoaded] = useFonts({
     Montserrat: require("../assets/fonts/Montserrat-VariableFont_wght.ttf"),
   });
 
   useEffect(() => {
     async function prepare() {
       try {
-        await SplashScreen.hideAsync();
-        setAppReady(true);
+        if (fontsLoaded) {
+          await SplashScreen.hideAsync();
+          setAppReady(true);
+        }
       } catch (e) {
         console.warn("Error hiding splash screen:", e);
         setAppReady(true);
       }
     }
-    
-    prepare();
-  }, []);
 
-  useEffect(() => {
-    if (appReady) {
-      // Показываем splash-изображение 3 секунды
-      const timer = setTimeout(() => {
-        setShowSplashImage(false);
-      }, 3000);
-      
-      return () => clearTimeout(timer);
-    }
-  }, [appReady]);
+    prepare();
+  }, [fontsLoaded]);
 
   useEffect(() => {
     if (language) {
       router.replace("/home");
     }
-  }, [language, router]);
+  }, [language]);
 
-  if (showSplashImage) {
-    return <SplashLoader showSpinner={false} />;
-  }
-
-  if (!language) {
-    return <LanguageSelect setLanguage={setLanguage} />;
+  if (!language || !appReady) {
+    return <StartScreen setLanguage={setLanguage} />;
   }
 
   return (

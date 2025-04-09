@@ -3,10 +3,16 @@ import { StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { View } from 'react-native';
+import AnimatedTabIcon from '@/components/AnimatedTabIcon';
+import { BlurView } from 'expo-blur';
+
+
 
 export default function TabLayout() {
   return (
     <View style={{ flex: 1 }}>
+            <BlurView intensity={50} tint="dark" style={StyleSheet.absoluteFill} />
+
       <Tabs
         screenOptions={{
           tabBarStyle: styles.tabBar,
@@ -24,7 +30,7 @@ export default function TabLayout() {
           options={{
             title: 'Главная',
             tabBarIcon: ({ focused, color }) => (
-              <Ionicons name={focused ? 'home' : 'home-outline'} size={24} color={color} />
+                <Ionicons name={focused ? 'home' : 'home-outline'} size={24} color={color} />
             ),
             headerShown: false,
           }}
@@ -86,7 +92,6 @@ export default function TabLayout() {
 
 const styles = StyleSheet.create({
   tabBar: {
-    backgroundColor: 'white',
     height: 85,
     position: 'absolute',
     bottom: 0,
