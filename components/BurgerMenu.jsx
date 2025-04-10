@@ -1,12 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, TouchableOpacity, Text, StyleSheet, Image, Animated, Easing } from 'react-native';
+import { View, TouchableOpacity, Text, StyleSheet, Image, Animated, Easing, Dimensions } from 'react-native';
 import { StatusBar } from 'react-native';
 import Menuburger from '@/assets/images/menuburgerPurple.svg';
 import AdminSlidesScreen from '@/components/AdminSlideScreen';
 import { useNavigation } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
 
 
 
+const { width } = Dimensions.get('window');
+const isSmallDevice = width < 375; 
 
 const icons = {
   'Расписание': require('@/assets/images/calendarBurger.png'),
@@ -31,7 +34,8 @@ const BurgerMenu = ({ isVisible, onClose, activeItem = '' }) => {
   const [selectedItem, setSelectedItem] = useState(activeItem);
   const slideAnim = useRef(new Animated.Value(300)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
-  const navigation = useNavigation();
+  const router = useRouter();
+
 
   useEffect(() => {
     if (isVisible) {
@@ -73,12 +77,13 @@ const BurgerMenu = ({ isVisible, onClose, activeItem = '' }) => {
     { label: 'Обращение', screen: 'FeedbackScreen' },
     { label: 'Контакт-центр', screen: 'ContactScreen' },
     { label: 'О приложении', screen: 'AboutScreen' },
-    { label: 'Админ-панель', screen: 'AdminSlides' },
+    { label: 'Админ-панель', screen: '/admin-slides' },
   ];
   
 
   return (
     <Animated.View
+    className={`${isSmallDevice ? 'pt-10' : 'pt-[60px]'}`}
     style={[
         styles.menuContainer,
         {
@@ -106,7 +111,7 @@ const BurgerMenu = ({ isVisible, onClose, activeItem = '' }) => {
           onPress={() => {
             setSelectedItem(item.label);
             onClose();
-            navigation.navigate(item.screen);
+            router.push(item.screen); // screen без слэша
           }}
         >
           {icons[item.label] && (
@@ -143,7 +148,6 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '120%',
         backgroundColor: 'white',
-        paddingTop: 60,
         paddingHorizontal: 10,
         shadowColor: '#000',
         shadowOffset: { width: -2, height: 0 },
