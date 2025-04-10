@@ -8,11 +8,17 @@ import CustomText from '@/components/CustomText';
 import BurgerMenu from '@/components/BurgerMenu'; 
 import NewsSlider from '@/components/NewsSlider';
 import { Entypo } from '@expo/vector-icons';
+import { Dimensions } from 'react-native';
+
 
 
 
 
 const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
+const { width } = Dimensions.get('window');
+
+const isSmallDevice = width < 375; 
+
 
 const icons = {
   cards: require('@/assets/images/card3x.png'),
@@ -58,6 +64,8 @@ const HomeScreen = () => {
     id:210103146,
     balance: '120'
   }
+
+
   
   const toggleMenu = () => {
     setMenuVisible(!isMenuVisible);
@@ -116,7 +124,7 @@ const HomeScreen = () => {
 
 
   return (
-    <SafeAreaView className='flex-1 bg-[#f1f1f1] font-Montserrat' style={{ flex: 1 }}>
+    <SafeAreaView className={`flex-1 bg-[#f1f1f1] font-Montserrat ${isSmallDevice ? 'max-h-[600px]' : ''}`} style={{ flex: 1 }}>
       <StatusBar barStyle="light-content" />      
       <View className='bg-[#716DAA] h-[130px] p-4 -mt-20 pt-20 shadow-md'>
         <View className='flex-row justify-between items-center' >
@@ -202,7 +210,7 @@ const HomeScreen = () => {
         </View>
 
           
-            <View className="flex-row gap-3">
+            <View className={`flex-row ${isSmallDevice ? 'gap-1' : 'gap-3'}`}>
             {[
               { icon: icons.bluetooth, label: "Bluetooth" },
               { icon: icons.qr, label: "QR Code" },
@@ -217,7 +225,7 @@ const HomeScreen = () => {
         </View>
         
         <TouchableOpacity 
-          className='mx-4 mt-6 mb-4 bg-[#716DAA] rounded-[20] p-4 items-center'
+          className={`mx-4 mt-6 mb-4 bg-[#716DAA] rounded-[20] p-4 items-center`}
         >
           <CustomText className='text-white text-2xl font-bold'>жду автобус</CustomText>
         </TouchableOpacity>
