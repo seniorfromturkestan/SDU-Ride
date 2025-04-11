@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
   View,
-  Text,
   TextInput,
   TouchableOpacity,
   ScrollView,
@@ -14,7 +13,7 @@ import CustomText from './CustomText';
 import { useNavigation } from '@react-navigation/native';
 import { useLayoutEffect } from 'react';
 import { Pressable } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Entypo, Ionicons } from '@expo/vector-icons';
 
 const AdminSlidesScreen = () => {
    const navigation = useNavigation();
@@ -31,9 +30,17 @@ const AdminSlidesScreen = () => {
       headerTintColor: '#fff',
       headerTitle: 'Админ-панель для staff',
       headerTitleAlign: 'center',
+      headerTitleStyle: {
+        fontSize: 18,
+        fontWeight: '600',
+        fontFamily: 'Montserrat',
+        paddingBottom: 10,
+      },
       headerLeft: () => (
         <Pressable onPress={() => navigation.goBack()} >
-          <Ionicons name="arrow-back" size={24} color="#fff" />
+          <TouchableOpacity className='bg-white rounded-lg' onPress={() => navigation.goBack()}>
+              <Entypo name="chevron-left" size={24} color="#716DAA"/>
+          </TouchableOpacity>
         </Pressable>
       ),
     });
@@ -53,7 +60,7 @@ const AdminSlidesScreen = () => {
   }, []);
 
   const addSlide = async () => {
-    if (!CustomText || !img) return Alert.alert('Ошибка', 'Заполни оба поля');
+    if (!CustomText || !img) return Alert.alert('Ошибка', 'Заполните оба поля');
     await addDoc(collection(db, 'SDU-Ride slides'), { text, img });
     setText('');
     setImg('');
@@ -81,8 +88,8 @@ const AdminSlidesScreen = () => {
         className="border border-[#716DAA] rounded-[10] p-3 mb-4"
       />
 
-      <TouchableOpacity onPress={addSlide} className="bg-[#716DAA] p-4 rounded-[10] mb-6 items-center">
-        <CustomText className="text-white font-semibold">Добавить</CustomText>
+      <TouchableOpacity onPress={addSlide} className="bg-[#716DAA] p-4 rounded-[15] mb-6 items-center">
+        <CustomText className="text-white font-semibold text-lg">Добавить</CustomText>
       </TouchableOpacity>
 
       {slides.map((slide) => (
@@ -94,9 +101,9 @@ const AdminSlidesScreen = () => {
           <CustomText className="text-xs text-gray-500 mb-2">{slide.img}</CustomText>
           <TouchableOpacity
             onPress={() => removeSlide(slide.id)}
-            className="bg-red-500 py-1 px-3 rounded-[10] self-start"
+            className="bg-red-500 py-2 px-3 rounded-[10] self-start"
           >
-            <CustomText className="text-white text-sm">Удалить</CustomText>
+            <CustomText className="text-white text-md">Удалить</CustomText>
           </TouchableOpacity>
         </View>
       ))}

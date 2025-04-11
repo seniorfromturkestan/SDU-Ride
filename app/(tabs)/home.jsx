@@ -164,7 +164,7 @@ const HomeScreen = () => {
                       <Image source={icons.cards} className="w-10 h-10 mr-3" />
                     <View>
                       <CustomText className="text-2xl font-bold text-white">Virtual Card</CustomText>
-                      <CustomText className="text-sm font-semibold text-white">{user.id}</CustomText>
+                      <CustomText className="text-md font-semibold text-white">{user.id}</CustomText>
                     </View>
                 </View>
                 <View className="flex-row items-center">

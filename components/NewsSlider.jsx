@@ -81,7 +81,7 @@ const NewsSlider = () => {
           <View style={{ width }} className="items-center justify-center">
             <ImageBackground
               source={{ uri: item.img }}
-              className="w-[93%] h-[86px] rounded-[20] overflow-hidden justify-end"
+              className="w-[93%] h-[84px] rounded-[20] overflow-hidden justify-end"
               imageStyle={{ borderRadius: 20 }}
             >
                 <LinearGradient

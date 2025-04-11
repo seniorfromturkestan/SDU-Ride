@@ -83,7 +83,7 @@ const BurgerMenu = ({ isVisible, onClose, activeItem = '' }) => {
 
   return (
     <Animated.View
-    className={`${isSmallDevice ? 'pt-10' : 'pt-[60px]'}`}
+    className={`${isSmallDevice ? 'pt-10' : 'pt-[70px]'}`}
     style={[
         styles.menuContainer,
         {
@@ -111,7 +111,7 @@ const BurgerMenu = ({ isVisible, onClose, activeItem = '' }) => {
           onPress={() => {
             setSelectedItem(item.label);
             onClose();
-            router.push(item.screen); // screen без слэша
+            router.push(item.screen); 
           }}
         >
           {icons[item.label] && (
