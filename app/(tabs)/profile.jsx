@@ -1,9 +1,12 @@
-import { Image, Text, View, Switch, ScrollView } from 'react-native';
+import { Image, Text, View, Switch, ScrollView, TouchableOpacity } from 'react-native';
 import { useLayoutEffect, useEffect, useState } from 'react';
 import { useNavigation } from 'expo-router';
 import * as Notifications from 'expo-notifications';
 import CustomText from '@/components/CustomText';
 import OkProfile from '@/assets/images/okProfile.svg';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { fetchProfileName } from '../../api/api';
+
 
 const icons = {
   user: require('@/assets/images/userIcon.png'),
@@ -18,6 +21,24 @@ export default function Profile() {
   const navigation = useNavigation();
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const [permissionGranted, setPermissionGranted] = useState(false);
+  const [profileName, setProfileName] = useState(null);
+
+  useEffect(() => {
+    const loadProfile = async () => {
+      try {
+        const id = await AsyncStorage.getItem('student_id');
+        if (!id) return;
+          const text = await fetchProfileName(id); 
+        setProfileName(text);
+      } catch (err) {
+        Alert.alert('Ошибка', err.message);
+      }
+    };
+
+    loadProfile();
+  }, []);
+
+  
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -62,21 +83,21 @@ export default function Profile() {
 
   return (
     <ScrollView className="flex-1 bg-gray-100 px-4 py-4">
-      <View className="flex-row items-center bg-white rounded-[20] px-4 py-4 mb-4">
+      <TouchableOpacity className="flex-row items-center bg-white rounded-[20] px-4 py-4 mb-4">
         <Image source={icons.user} className="w-9 h-9 mr-4" />
         <View>
           <CustomText className="font-medium text-lg">Добро пожаловать!</CustomText>
           <View className="flex-row items-center">
-            <CustomText className="text-md font-bold mr-1">Zhanarys Seidakhan</CustomText>
+            <CustomText className="text-md font-bold mr-1">{profileName || '...'}</CustomText>
             <OkProfile width={14} height={14}/>
           </View>
 
         </View>
-      </View>
+      </TouchableOpacity>
 
       <View className="bg-white rounded-[20] p-2 mb-4">
         <Option icon={icons.settings} text="Настройки приложения" className='py-4'/>
-        <Option icon={icons.security} iconClassName="h-[38px]"  className='border-t py-4' text="Безопасность" />
+        <Option icon={icons.security} iconClassName="h-[38px]"  className='border-t py-4 border-[#716DAA]' text="Безопасность" />
         <Option
           icon={icons.bell}
           text="Уведомления и звуки"
@@ -107,7 +128,7 @@ const Option = ({
   className = '',
   iconClassName = '',
 }) => (
-  <View className={`flex-row items-center justify-between px-2 py-3 border-b border-gray-200 last:border-b-0 ${className}`}>
+  <TouchableOpacity className={`flex-row items-center justify-between px-2 py-3 border-b border-gray-200 last:border-b-0 ${className}`}>
     <View className="flex-row items-center">
       <Image source={icon} className={`w-9 h-9 mr-4 ${iconClassName}`} />
       <CustomText className="text-lg">{text}</CustomText>
@@ -121,5 +142,5 @@ const Option = ({
         value={value}
       />
     )}
-  </View>
+  </TouchableOpacity>
 );

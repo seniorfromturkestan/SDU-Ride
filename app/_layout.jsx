@@ -7,7 +7,9 @@ import "../global.css";
 import { View } from "react-native";
 import { useRouter } from "expo-router";
 import { useFonts } from "expo-font";
+import Constants from 'expo-constants';
 import StartScreen from "@/components/StartScreen";
+
 
 
 SplashScreen.preventAutoHideAsync();
@@ -16,6 +18,8 @@ export default function RootLayout() {
   const router = useRouter();
   const [language, setLanguage] = useState(null);
   const [appReady, setAppReady] = useState(false);
+  const [gmail, setGmail] = useState(null);
+  const [verified, setVerified] = useState(false);
 
   const [fontsLoaded] = useFonts({
     Montserrat: require("../assets/fonts/Montserrat-VariableFont_wght.ttf"),
@@ -38,14 +42,29 @@ export default function RootLayout() {
   }, [fontsLoaded]);
 
   useEffect(() => {
-    if (language) {
+    if (verified) {
       router.replace("/home");
     }
-  }, [language]);
+  }, [verified]);
 
-  if (!language || !appReady) {
-    return <StartScreen setLanguage={setLanguage} />;
+  if (!appReady) return null;
+
+  if (!verified) {
+    return (
+      <StartScreen
+        setLanguage={setLanguage}
+        setGmail={setGmail}
+        setVerified={setVerified}
+      />
+    );
   }
+
+  
+
+  const { API_URL } = Constants.expoConfig.extra;
+
+  console.log("API_URL:", API_URL);
+
 
   return (
     <ThemeProvider value={DefaultTheme}>
