@@ -5,6 +5,8 @@ import Menuburger from '@/assets/images/menuburgerPurple.svg';
 import AdminSlidesScreen from '@/components/AdminSlideScreen';
 import { useNavigation } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
+import * as Haptics from 'expo-haptics';
+
 
 
 
@@ -94,10 +96,13 @@ const BurgerMenu = ({ isVisible, onClose, activeItem = '' }) => {
     ]}
     >
       <View style={styles.header}>
-        <TouchableOpacity className='flex mr-auto -ml-2 -mt-4'>
+        <TouchableOpacity className='flex mr-auto -ml-2 -mt-6'>
               <Image source={icons1.iconride} className='w-36 h-16' resizeMode='contain'/>
           </TouchableOpacity>
-        <TouchableOpacity onPress={onClose} className='-mt-3 -mr-1'>
+        <TouchableOpacity  onPress={() => {
+              onClose();
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            }} className='-mt-5'>
           <Menuburger name="close"width={24} height={24} color="#716DAA"/>
         </TouchableOpacity>
       </View>
@@ -181,6 +186,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     borderRadius: 20,
     marginVertical: 3,
+    // borderBottomWidth: 0.2,
+    // borderBottomColor: '#716DAA',
 },
   activeItem: {
     backgroundColor: '#EEEEEE',

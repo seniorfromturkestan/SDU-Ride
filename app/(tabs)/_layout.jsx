@@ -3,16 +3,13 @@ import { StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { View } from 'react-native';
-import AnimatedTabIcon from '@/components/AnimatedTabIcon';
-import { BlurView } from 'expo-blur';
 
 
 
 export default function TabLayout() {
   return (
     <View style={{ flex: 1 }}>
-            <BlurView intensity={50} tint="dark" style={StyleSheet.absoluteFill} />
-
+      
       <Tabs
         screenOptions={{
           tabBarStyle: styles.tabBar,

@@ -9,9 +9,7 @@ import BurgerMenu from '@/components/BurgerMenu';
 import NewsSlider from '@/components/NewsSlider';
 import { Entypo } from '@expo/vector-icons';
 import { Dimensions } from 'react-native';
-
-
-
+import * as Haptics from 'expo-haptics';
 
 
 const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
@@ -35,26 +33,7 @@ const slides = [
     id: '1',
     text: 'SDU делает важный шаг на пути к улучшению качества образования',
     image: require('@/assets/images/sdunews.jpg'),
-  },
-  {
-    id: '2',
-    text: 'Университет принял международных гостей',
-    image: require('@/assets/images/sdunews.jpg'),
-  },
-  {
-    id: '3',
-    text: 'Объявлены новые гранты для студентов',
-    image: require('@/assets/images/sdunews.jpg'),
-  },
-  {
-    id: '4',
-    text: 'Объявлены новые гранты для студентов',
-    image: require('@/assets/images/sdunews.jpg'),
-  },{
-    id: '5',
-    text: 'Объявлены новые гранты для студентов',
-    image: require('@/assets/images/sdunews.jpg'),
-  },
+  }
 ];
 
 
@@ -131,11 +110,15 @@ const HomeScreen = () => {
           <TouchableOpacity>
               <Image source={icons.iconride} className='w-36 h-16' resizeMode='contain'/>
           </TouchableOpacity>
-          <TouchableOpacity isVisible={isMenuVisible} onPress={toggleMenu} className='mr-2'>
-            <Menuburger width={24} height={24} />
+          <TouchableOpacity isVisible={isMenuVisible} onPress={() => {
+              toggleMenu();
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            }} className='mr-2'>
+            <Menuburger width={24} height={24}/>
           </TouchableOpacity>
         </View>
       </View>
+
 
       <BurgerMenu isVisible={isMenuVisible} onClose={() => setMenuVisible(false)}  />
       {isMenuVisible && (
@@ -146,11 +129,9 @@ const HomeScreen = () => {
         />
       )}
 
-
-      
       <ScrollView className='flex-1'>
         
-        <View className="mx-4 mt-6 rounded-[20px] h-44 shadow-md overflow-hidden">
+        <View className="mx-4 mt-5 rounded-[20px] h-44 shadow-md overflow-hidden">
           
           <AnimatedLinearGradient
             colors={[color1, color2, color3, color4]}
