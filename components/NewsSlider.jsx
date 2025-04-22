@@ -64,7 +64,7 @@ const NewsSlider = () => {
   if (slides.length === 0) return null;
 
   return (
-    <View className="h-[100px] mt-3 overflow-hidden">
+    <View className="h-[100px] mt-2 overflow-hidden">
       <FlatList
         ref={flatListRef}
         data={slides}
@@ -81,7 +81,7 @@ const NewsSlider = () => {
           <View style={{ width }} className="items-center justify-center">
             <ImageBackground
               source={{ uri: item.img }}
-              className="w-[93%] h-[84px] rounded-[20] overflow-hidden justify-end"
+              className="w-[93%] h-[80px] rounded-[20] overflow-hidden justify-end"
               imageStyle={{ borderRadius: 20 }}
             >
                 <LinearGradient

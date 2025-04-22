@@ -53,7 +53,7 @@ export default function RootLayout() {
     return (
       <StartScreen
         setLanguage={setLanguage}
-        setGmail={setGmail}
+        // setGmail={setGmail}
         setVerified={setVerified}
       />
     );

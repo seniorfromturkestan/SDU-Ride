@@ -11,15 +11,17 @@ import EmailScreen from '@/components/EmailScreen';
 import CodeScreen from '@/components/CodeScreen';
 import LottieView from 'lottie-react-native';
 import RegisterScreen from '@/components/RegisterScreen';
+import { useRouter } from 'expo-router';
 
 const StartScreen = ({ setLanguage, setVerified }) => {
+  const router = useRouter();
+
   const [bgLoaded, setBgLoaded] = useState(false);
   const [gmail, setGmail] = useState('');
 
   const [showLanguage, setShowLanguage] = useState(true);
   const [showEmail, setShowEmail] = useState(false);
   const [showCode, setShowCode] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
 
 
@@ -43,7 +45,7 @@ const StartScreen = ({ setLanguage, setVerified }) => {
               useNativeDriver: true,
             }),
           ]).start();
-        }, 3000);
+        }, 1000);
   
         return () => clearTimeout(timer);
       }
@@ -51,21 +53,24 @@ const StartScreen = ({ setLanguage, setVerified }) => {
 
   const handleLangSelect = (lang) => {
     setLanguage(lang);
-    setShowLanguage(false);
-    setShowEmail(true);
+    setVerified(true);
+    // setShowLanguage(false);
+    // setShowEmail(true);
+  
+
   };
 
-  const handleEmailSuccess = (email) => {
-    setGmail(email);
-    setShowEmail(false);
-    setShowCode(true);
-  };
+  // const handleEmailSuccess = (email) => {
+  //   setGmail(email);
+  //   setShowEmail(false);
+  //   setShowCode(true);
+  // };
 
-  const handleCodeSuccess = () => {
-    setShowCode(false);
-    setShowRegister(true);
+  // const handleCodeSuccess = () => {
+  //   setShowCode(false);
+  //   setShowRegister(true);
    
-  };
+  // };
 
 
   return (
@@ -102,17 +107,17 @@ const StartScreen = ({ setLanguage, setVerified }) => {
           </Animated.View>
         )}
 
-        {showEmail && <EmailScreen onSuccess={handleEmailSuccess} />}
+        {/* {showEmail && <EmailScreen onSuccess={handleEmailSuccess} />}
         {showCode && <CodeScreen gmail={gmail} onVerified={handleCodeSuccess} />}
         {showRegister && (
           <RegisterScreen
             gmail={gmail}
             onRegistered={() => {
               setShowRegister(false);
-              setVerified(true); // → router.replace("/home")
+              setVerified(true); 
             }}
           />
-        )}
+        )} */}
 
         
 

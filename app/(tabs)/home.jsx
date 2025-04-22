@@ -131,7 +131,7 @@ const HomeScreen = () => {
 
       <ScrollView className='flex-1'>
         
-        <View className="mx-4 mt-5 rounded-[20px] h-44 shadow-md overflow-hidden">
+        <View className="mx-4 mt-4 rounded-[20px] h-40 shadow-md overflow-hidden">
           
           <AnimatedLinearGradient
             colors={[color1, color2, color3, color4]}
@@ -207,6 +207,7 @@ const HomeScreen = () => {
         
         <TouchableOpacity 
           className={`mx-4 mt-6 mb-4 bg-[#716DAA] rounded-[20] p-4 items-center`}
+          style={styles.shadowButton}
         >
           <CustomText className='text-white text-2xl font-bold'>жду автобус</CustomText>
         </TouchableOpacity>
@@ -226,7 +227,16 @@ const styles = StyleSheet.create({
     bottom: 0,
     backgroundColor: 'rgba(0,0,0,0.5)',
     zIndex: 1,
-  }
+  },
+  shadowButton: {
+    shadowColor: '#716DAA',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 8,
+    
+    
+  },
 });
 
 

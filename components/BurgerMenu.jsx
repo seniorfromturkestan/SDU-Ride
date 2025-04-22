@@ -1,9 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet, Image, Animated, Easing, Dimensions } from 'react-native';
-import { StatusBar } from 'react-native';
 import Menuburger from '@/assets/images/menuburgerPurple.svg';
-import AdminSlidesScreen from '@/components/AdminSlideScreen';
-import { useNavigation } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 
