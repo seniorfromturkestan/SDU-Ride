@@ -105,7 +105,7 @@ const HomeScreen = () => {
   return (
     <SafeAreaView className={`flex-1 bg-[#f1f1f1] font-Montserrat ${isSmallDevice ? 'max-h-[600px]' : ''}`} style={{ flex: 1 }}>
       <StatusBar barStyle="light-content" />      
-      <View className='bg-[#716DAA] h-[130px] p-4 -mt-20 pt-20 shadow-md'>
+      <View className='bg-[#716DAA] h-[130px] p-4 -mt-20 pt-20 shadow-custom'>
         <View className='flex-row justify-between items-center' >
           <TouchableOpacity>
               <Image source={icons.iconride} className='w-36 h-16' resizeMode='contain'/>
@@ -131,14 +131,13 @@ const HomeScreen = () => {
 
       <ScrollView className='flex-1'>
         
-        <View className="mx-4 mt-4 rounded-[20px] h-40 shadow-md overflow-hidden">
-          
+        <View className="mx-4 mt-4 h-40 shadow-gradient">
           <AnimatedLinearGradient
             colors={[color1, color2, color3, color4]}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
-            style={StyleSheet.absoluteFill}
-          >
+            style={[StyleSheet.absoluteFill, { borderRadius: 20 }]}
+            >
             <View className="p-4">
               <View className="flex-row justify-between items-center">
                 <View className="flex-row items-center">

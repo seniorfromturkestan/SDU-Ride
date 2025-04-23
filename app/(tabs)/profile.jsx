@@ -83,7 +83,7 @@ export default function Profile() {
 
   return (
     <ScrollView className="flex-1 bg-gray-100 px-4 py-4">
-      <TouchableOpacity className="flex-row items-center bg-white rounded-[20] px-4 py-4 mb-4">
+      <TouchableOpacity className="flex-row items-center bg-white rounded-[20] shadow-custom px-4 py-4 mb-4">
         <Image source={icons.user} className="w-9 h-9 mr-4" />
         <View>
           <CustomText className="font-medium text-lg">Добро пожаловать!</CustomText>
@@ -95,7 +95,7 @@ export default function Profile() {
         </View>
       </TouchableOpacity>
 
-      <View className="bg-white rounded-[20] p-2 mb-4">
+      <View className="bg-white rounded-[20] p-2 mb-4 shadow-custom">
         <Option icon={icons.settings} text="Настройки приложения" className='py-4'/>
         <Option icon={icons.security} iconClassName="h-[38px]"  className='border-t py-4 border-[#716DAA]' text="Безопасность" />
         <Option
@@ -108,11 +108,11 @@ export default function Profile() {
         />
       </View>
 
-      <View className="bg-white rounded-[20] p-2 py-1 mt-8">
+      <View className="bg-white rounded-[20] p-2 py-1 mt-8 shadow-custom">
         <Option icon={icons.share} text="Поделиться с друзьями из SDU" />
       </View>
 
-      <View className="bg-white rounded-[20] p-2 py-1 mt-4">
+      <View className="bg-white rounded-[20] p-2 py-1 mt-4 shadow-custom">
         <Option icon={icons.exit} text="Выйти" />
       </View>
     </ScrollView>

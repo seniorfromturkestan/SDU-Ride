@@ -150,7 +150,6 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '120%',
         backgroundColor: 'white',
-        paddingHorizontal: 10,
         shadowColor: '#000',
         shadowOffset: { width: -2, height: 0 },
         shadowOpacity: 0.2,
@@ -166,7 +165,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
     borderBottomColor: '#716DAA',
     paddingBottom: 5,
-    paddingHorizontal: 15,
+    paddingHorizontal: 25,
     marginBottom: 30,
   },
   logoText: {
@@ -179,12 +178,10 @@ const styles = StyleSheet.create({
   menuItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 10,
-    borderRadius: 20,
-    marginVertical: 3,
-    // borderBottomWidth: 0.2,
-    // borderBottomColor: '#716DAA',
+    paddingVertical: 18,
+    paddingHorizontal: 20,
+    borderBottomWidth: 0.2,
+    borderBottomColor: '#716DAA',
 },
   activeItem: {
     backgroundColor: '#EEEEEE',

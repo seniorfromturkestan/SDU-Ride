@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Alert,
+  ImageBackground,
 } from 'react-native';
 import { collection, addDoc, deleteDoc, doc, onSnapshot } from 'firebase/firestore';
 import { db } from '@/firebase.config';
@@ -71,43 +72,52 @@ const AdminSlidesScreen = () => {
   };
 
   return (
-    <ScrollView className="flex-1 p-4 bg-white">
-      <CustomCustomText className="text-2xl font-bold mb-4">Управление слайдами</CustomCustomText>
+    <View className="flex-1 bg-white">
+  <View className="p-4 bg-white">
+    <CustomCustomText className="text-2xl text-[#716DAA] font-bold mb-4 text-center">Управление слайдами</CustomCustomText>
 
-      <TextInput
-        placeholder="Текст слайда"
-        value={text}
-        onChangeText={setText}
-        className="border border-[#716DAA] rounded-[10] p-3 mb-2"
-      />
+    <TextInput
+      placeholder="Текст слайда"
+      value={text}
+      onChangeText={setText}
+      className="border border-[#716DAA] rounded-[12] p-3 mb-2 font-Montserrat"
+    />
 
-      <TextInput
-        placeholder="URL картинки"
-        value={img}
-        onChangeText={setImg}
-        className="border border-[#716DAA] rounded-[10] p-3 mb-4"
-      />
+    <TextInput
+      placeholder="URL картинки"
+      value={img}
+      onChangeText={setImg}
+      className="border border-[#716DAA] rounded-[12] p-3 mb-4 font-Montserrat"
+    />
 
-      <TouchableOpacity onPress={addSlide} className="bg-[#716DAA] p-4 rounded-[15] mb-6 items-center">
-        <CustomText className="text-white font-semibold text-lg">Добавить</CustomText>
-      </TouchableOpacity>
+    <TouchableOpacity onPress={addSlide} className="bg-[#716DAA] p-4 rounded-[20] items-center">
+      <CustomText className="text-white font-semibold text-lg">Добавить</CustomText>
+    </TouchableOpacity>
+  </View>
 
-      {slides.map((slide) => (
-        <View
-          key={slide.id}
-          className="border border-gray-200 rounded-[10] p-3 mb-3 bg-gray-50"
+  <ScrollView className="flex-1 p-4">
+    {slides.map((slide) => (
+      <View
+        key={slide.id}
+        className="border border-gray-200 rounded-[20] p-3 mb-3 bg-gray-50"
+      >
+        <CustomText className="text-md font-semibold mb-1">{slide.text}</CustomText>
+        <ImageBackground
+          source={{ uri: slide.img }}
+          className="w-full h-[80px] rounded-[15] shadow-xl overflow-hidden my-2 justify-end"
+          imageStyle={{ borderRadius: 20 }}
+        />
+        <TouchableOpacity
+          onPress={() => removeSlide(slide.id)}
+          className="bg-red-500 py-2 px-3 rounded-[10] self-end"
         >
-          <CustomText className="text-sm font-semibold mb-1">{slide.text}</CustomText>
-          <CustomText className="text-xs text-gray-500 mb-2">{slide.img}</CustomText>
-          <TouchableOpacity
-            onPress={() => removeSlide(slide.id)}
-            className="bg-red-500 py-2 px-3 rounded-[10] self-start"
-          >
-            <CustomText className="text-white text-md">Удалить</CustomText>
-          </TouchableOpacity>
-        </View>
-      ))}
-    </ScrollView>
+          <CustomText className="text-white text-md">Удалить</CustomText>
+        </TouchableOpacity>
+      </View>
+    ))}
+  </ScrollView>
+</View>
+
   );
 };
 

@@ -5,6 +5,8 @@ import CustomText from '@/components/CustomText';
 import PhoneIcon from '@/assets/images/phone.png';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import * as Animatable from 'react-native-animatable';
+import * as Haptics from 'expo-haptics';
+
 
 
 const ridesToAlmaty = [
@@ -85,9 +87,8 @@ const ridesToSDU = [
   },
 ];
 
-const tabWidth = Dimensions.get('window').width / 2;
-const adjustedTabWidth = tabWidth - 8;
-
+const tabWidth = Dimensions.get('window').width / 2 - 22;
+const isSmallDevice = Dimensions.get('window').width < 375; // Adjust this threshold as needed
 
 export default function RidesScreen() {
   const [direction, setDirection] = useState('Алматы');
@@ -125,7 +126,7 @@ export default function RidesScreen() {
         <Image source={require('@/assets/images/userIcon.png')} className="w-9 h-9" resizeMode="contain" />
         <CustomText className="text-xs my-2 font-medium text-gray-500">{item.role}</CustomText>
         <TouchableOpacity className="bg-gray-100 p-3 rounded-full">
-          <Image source={PhoneIcon} style={styles.icon} />
+          <Image href="tel:+79001111111" source={PhoneIcon} style={styles.icon} />
         </TouchableOpacity>
       </View>
       <View className="flex-1 ml-2">
@@ -145,27 +146,27 @@ export default function RidesScreen() {
 
   return (
     <View className="relative flex-1 pt-4">
-<View className="relative flex-row bg-gray-200 rounded-[15] mx-4 mb-4  py-1 space-x-1 overflow-hidden">
-<Animated.View
-  style={[
-    {
-      position: 'absolute',
-      top: 0,
-      bottom: 0,
-      width: '50%',
-      backgroundColor: 'white',
-      margin:4,
-      borderRadius: 12,
-      zIndex: 0,
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.08,
-      shadowRadius: 4,
-      elevation: 3,
-    },
-    indicatorStyle,
-  ]}
-/>
+      <View className="relative flex-row bg-gray-200 rounded-[15] mx-4 mb-4 py-1 overflow-hidden">
+      <Animated.View
+        style={[
+          {
+            position: 'absolute',
+            top: 0,
+            bottom: 0,
+            width: '50%',
+            backgroundColor: 'white',
+            margin:4,
+            borderRadius: 12,
+            zIndex: 0,
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.08,
+            shadowRadius: 4,
+            elevation: 3,
+          },
+          indicatorStyle,
+        ]}
+      />
 
 
         {['Алматы', 'SDU'].map((tab) => (
@@ -175,6 +176,8 @@ export default function RidesScreen() {
             onPress={() => {
               setAnimation(tab === 'Алматы' ? 'slideInLeft' : 'slideInRight');
               setDirection(tab);
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+
             }}
           >
             <CustomText
@@ -194,14 +197,14 @@ export default function RidesScreen() {
         animation={animation}
         duration={400}
         useNativeDriver
-        className="px-4 pb-[200px]" 
+        className="px-4" 
       >
         <FlatList
           data={currentRides}
           keyExtractor={(item) => item.id}
           renderItem={renderItem}
           showsVerticalScrollIndicator={false}
-          ListFooterComponent={<View style={{ height: 100 }} />} 
+          ListFooterComponent={<View style={{ height: 300 }} />} 
         />
       </Animatable.View>
 

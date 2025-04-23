@@ -4,6 +4,8 @@ import { Search, X } from 'lucide-react-native';
 import { useNavigation } from 'expo-router';
 import CustomText from '@/components/CustomText';
 import { StyleSheet } from 'react-native';
+import * as Haptics from 'expo-haptics';
+
 
 
 const busRoutes = [
@@ -51,7 +53,6 @@ export default function TabTwoScreen() {
 
   return (
     <View style={styles.container}>
-      {/* Поисковая строка */}
       <View className="flex-row items-center bg-gray-100 rounded-xl px-4 py-3">
         <Search size={20} color="#9CA3AF" className="mr-5" />
         <TextInput
@@ -62,13 +63,17 @@ export default function TabTwoScreen() {
           placeholderTextColor="#9CA3AF"
         />
         {search.length > 0 && (
-          <TouchableOpacity onPress={() => setSearch('')}>
+          <TouchableOpacity onPress={() => {
+            setSearch('');
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+
+            }
+          }>
             <X size={20} color="#9CA3AF" />
           </TouchableOpacity>
         )}
       </View>
     
-      {/* Список маршрутов */}
       <FlatList
         data={filteredRoutes}
         className="pt-8"
@@ -77,8 +82,11 @@ export default function TabTwoScreen() {
         renderItem={({ item }) => (
           <TouchableOpacity
             className="flex-row items-center mb-4"
-            onPress={() =>
-              setSelectedId(selectedId === item.id ? null : item.id)
+            onPress={() =>{
+              setSelectedId(selectedId === item.id ? null : item.id);
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+
+            }
             }
           >
             <View className="w-12 h-12 mr-4 items-center">
@@ -97,13 +105,20 @@ export default function TabTwoScreen() {
         )}
       />
     
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.mapButton}>
-          <CustomText className="text-white font-semibold text-base">
-            Посмотреть на карте
-          </CustomText>
-        </TouchableOpacity>
-      </View>
+        {selectedId && (
+          <TouchableOpacity
+            className="bg-[#716DAA] absolute left-4 right-4 bottom-28 py-4 rounded-[20] items-center"
+            style={styles.shadowButton}
+            onPress={() => {
+              // navigation.navigate('busdetails', { busId: selectedId });
+              // Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            }}
+          >
+            <CustomText className="text-white font-bold text-xl">Посмотреть маршрут</CustomText>
+          </TouchableOpacity>
+        )}
+      
+      
     </View>
   );
 }
@@ -117,20 +132,17 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   listContent: {
-    paddingBottom: 80, // Важно: оставляем место для кнопки
+    paddingBottom: 80, 
   },
-  buttonContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    padding: 16,
-    backgroundColor: 'white',
+  shadowButton: {
+    shadowColor: '#716DAA',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 8,
+    
+    
   },
-  mapButton: {
-    backgroundColor: '#716DAA',
-    borderRadius: 12,
-    paddingVertical: 16,
-    alignItems: 'center',
-  },
+  
+
 });
