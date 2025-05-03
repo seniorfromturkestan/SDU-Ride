@@ -4,9 +4,6 @@ import Menuburger from '@/assets/images/menuburgerPurple.svg';
 import { useRouter } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 
-
-
-
 const { width } = Dimensions.get('window');
 const isSmallDevice = width < 375; 
 
@@ -16,7 +13,7 @@ const icons = {
   'Обращение': require('@/assets/images/mailBurger.png'),
   'Контакт-центр': require('@/assets/images/phoneBurger.png'),
   'О приложении': require('@/assets/images/aboutUsBurger.png'),
-  'Админ-панель': require('@/assets/images/aboutUsBurger.png'),
+  'Админ-панель': require('@/assets/images/userIcon.png'),
 };
 
 const icons1 = {
@@ -34,7 +31,6 @@ const BurgerMenu = ({ isVisible, onClose, activeItem = '' }) => {
   const slideAnim = useRef(new Animated.Value(300)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const router = useRouter();
-
 
   useEffect(() => {
     if (isVisible) {
@@ -78,19 +74,19 @@ const BurgerMenu = ({ isVisible, onClose, activeItem = '' }) => {
     { label: 'О приложении', screen: 'AboutScreen' },
     { label: 'Админ-панель', screen: '/admin-slides' },
   ];
-  
+
 
   return (
     <Animated.View
-    className={`${isSmallDevice ? 'pt-10' : 'pt-[70px]'}`}
-    style={[
-        styles.menuContainer,
-        {
-        transform: [{ translateX: slideAnim }],
-        opacity: fadeAnim, 
-        fontFamily:"Montserrat",
-        },
-    ]}
+      className={`${isSmallDevice ? 'pt-10' : 'pt-[72px]'}`}
+      style={[
+          styles.menuContainer,
+          {
+          transform: [{ translateX: slideAnim }],
+          opacity: fadeAnim, 
+          fontFamily:"Montserrat",
+          },
+      ]}
     >
       <View style={styles.header}>
         <TouchableOpacity className='flex mr-auto -ml-2 -mt-6'>
@@ -100,7 +96,7 @@ const BurgerMenu = ({ isVisible, onClose, activeItem = '' }) => {
               onClose();
               Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
             }} className='-mt-5'>
-          <Menuburger name="close"width={24} height={24} color="#716DAA"/>
+          <Menuburger name="close" width={24} height={24} color="#716DAA"/>
         </TouchableOpacity>
       </View>
       {menuItems.map((item, index) => (
@@ -112,7 +108,6 @@ const BurgerMenu = ({ isVisible, onClose, activeItem = '' }) => {
           ]}
           onPress={() => {
             setSelectedItem(item.label);
-            onClose();
             router.push(item.screen); 
           }}
         >
@@ -180,7 +175,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 18,
     paddingHorizontal: 20,
-    borderBottomWidth: 0.2,
     borderBottomColor: '#716DAA',
 },
   activeItem: {
@@ -195,7 +189,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#000',
     fontFamily: 'Montserrat',
-    fontWeight: '400',
+    fontWeight: '500',
   },
 });
 

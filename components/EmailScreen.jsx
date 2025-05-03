@@ -9,8 +9,10 @@ import {
   Animated,
   Easing,
 } from 'react-native';
-import { sendCode } from '../api/api';
+import { sendCode } from '../api/user service/user.api';
 import CustomText from '@/components/CustomText';
+import LottieView from 'lottie-react-native';
+import Toast from 'react-native-toast-message';
 
 const EmailScreen = ({ onSuccess }) => {
   const [gmail, setGmail] = useState('');
@@ -18,10 +20,11 @@ const EmailScreen = ({ onSuccess }) => {
 
   const shift = useRef(new Animated.Value(0)).current;
 
+
   useEffect(() => {
     const keyboardDidShow = Keyboard.addListener('keyboardDidShow', (e) => {
       Animated.timing(shift, {
-        toValue: -e.endCoordinates.height / 2,
+        toValue: -e.endCoordinates.height / 2.3,
         duration: 100,
         easing: Easing.out(Easing.ease),
         useNativeDriver: true,
@@ -46,7 +49,12 @@ const EmailScreen = ({ onSuccess }) => {
   const handleSend = async () => {
     if (!gmail) {
       setTimeout(() => {
-        Alert.alert("Ошибка", "Введите Gmail");
+        Toast.show({
+          type: 'error',
+          text1: 'Ошибка',
+          text2: 'Введите Gmail',
+          position: 'bottom',
+        });
       }, 50);
       return;
     }
@@ -97,15 +105,26 @@ const EmailScreen = ({ onSuccess }) => {
               keyboardType="email-address"
             />
 
-            <TouchableOpacity
-              onPress={handleSend}
-              className="bg-[#716DAA] w-full rounded-2xl p-3 mt-4"
-              disabled={loading}
-            >
+          <TouchableOpacity
+            className="bg-[#716DAA] p-3 rounded-[15] mt-4 h-[50px] items-center justify-center flex-row"
+            onPress={handleSend}
+            disabled={loading}
+          >
+            <View className="flex-row items-center">
               <CustomText className="text-white text-xl text-center">
-                {loading ? "Отправка..." : "Отправить код"}
+                {loading ? 'Отправка' : 'Отправить код'}
               </CustomText>
-            </TouchableOpacity>
+
+              {loading && (
+                  <LottieView
+                    source={require('@/assets/animations/animation3.json')}
+                    autoPlay
+                    loop
+                    style={{ width: 80, height: 80, marginLeft: -20, paddingBottom: 8 }}
+                  />
+              )}
+            </View>
+          </TouchableOpacity>
           </View>
         </View>
       </Animated.View>

@@ -9,8 +9,10 @@ import {
   Animated,
   Easing,
 } from 'react-native';
-import { checkCode, sendCode } from '../api/api';
+import { checkCode, sendCode } from '../api/user service/user.api';
 import CustomText from './CustomText';
+import LottieView from 'lottie-react-native';
+import Toast from 'react-native-toast-message';
 
 const CodeScreen = ({ gmail, onVerified }) => {
   const [code, setCode] = useState('');
@@ -50,13 +52,23 @@ const CodeScreen = ({ gmail, onVerified }) => {
       await checkCode(gmail, code);
       setLoading(false);
       setTimeout(() => {
-        Alert.alert('Успех', 'Код подтвержден');
+        Toast.show({
+          type: 'success',
+          text1: 'Успех',
+          text2: `Код подтвержден`,
+          position: 'bottom',
+        });
         onVerified();
-      }, 50);
+      }, 1000);
     } catch (err) {
       setLoading(false);
       setTimeout(() => {
-        Alert.alert('Ошибка', err.message);
+        Toast.show({
+          type: 'error',
+          text1: 'Ошибка',
+          text2: err.message,
+          position: 'bottom',
+        });
       }, 50);
     }
   };
@@ -69,7 +81,13 @@ const CodeScreen = ({ gmail, onVerified }) => {
     } catch (err) {
       setLoadingSend(false);
       setTimeout(() => {
-        Alert.alert("Ошибка", err.message);
+        Toast.show({
+          type: 'error',
+          text1: 'Ошибка',
+          text2: err.message,
+          position: 'bottom',
+        });
+       
       }, 50);
     }
   };
@@ -92,7 +110,7 @@ const CodeScreen = ({ gmail, onVerified }) => {
           <View className="bg-white px-6 pt-6 pb-64 rounded-t-[20] z-10">
             <CustomText className="text-2xl font-bold mb-4 text-black">Введите код из SMS</CustomText>
             <CustomText className="text-md mb-4 text-black">
-              На вашу почту {gmail} был отправлен код подтверждения.
+              На вашу почту <CustomText className='font-bold'>{gmail}</CustomText>  был отправлен код подтверждения.
             </CustomText>
 
             <TextInput
@@ -103,15 +121,28 @@ const CodeScreen = ({ gmail, onVerified }) => {
               keyboardType="numeric"
             />
 
-            <TouchableOpacity
-              className="bg-[#716DAA] w-full rounded-2xl p-3 mt-4"
-              onPress={handleCheck}
-              disabled={loading}
-            >
-              <CustomText className="text-white text-center text-lg">
-                {loading ? 'Проверка...' : 'Проверить код'}
+        <TouchableOpacity
+            className="bg-[#716DAA] p-3 rounded-[15] mt-4 h-[50px] items-center justify-center flex-row"
+            onPress={handleCheck}
+            disabled={loading}
+          >
+            <View className="flex-row items-center">
+              <CustomText className="text-white text-xl text-center">
+                {loading ? 'Отправка' : 'Отправить код'}
               </CustomText>
-            </TouchableOpacity>
+
+              {loading && (
+                <View style={{height: 90}}>
+                  <LottieView
+                    source={require('@/assets/animations/animation3.json')}
+                    autoPlay
+                    loop
+                    style={{ width: 80, height: 80, marginLeft: -20 }}
+                  />
+                </View>
+              )}
+            </View>
+          </TouchableOpacity>
 
             <TouchableOpacity
               onPress={handleSend}

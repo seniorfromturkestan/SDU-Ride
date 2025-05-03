@@ -10,8 +10,9 @@ import {
   Easing,
 } from 'react-native';
 import CustomText from './CustomText';
-import { registerUser } from '../api/api';
+import { registerUser } from '../api/user service/user.api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Toast from 'react-native-toast-message';
 
 
 
@@ -58,8 +59,15 @@ const RegisterScreen = ({ gmail, onRegistered }) => {
         await registerUser(name, studentId);
         await AsyncStorage.setItem('student_id', studentId); 
         setLoading(false);
-        Alert.alert('Успешно', 'Вы зарегистрированы');
+        setTimeout(() => {
+        Toast.show({
+          type: 'success',
+          text1: 'Добро пожаловать!',
+          text2: `Вы зарегистрированы на SDU Ride`,
+          position: 'bottom',
+        });        
         onRegistered();
+      }, 1500);
       } catch (err) {
         setLoading(false);
         Alert.alert('Ошибка', err.message);

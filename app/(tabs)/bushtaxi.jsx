@@ -88,7 +88,7 @@ const ridesToSDU = [
 ];
 
 const tabWidth = Dimensions.get('window').width / 2 - 22;
-const isSmallDevice = Dimensions.get('window').width < 375; // Adjust this threshold as needed
+const isSmallDevice = Dimensions.get('window').width < 375; 
 
 export default function RidesScreen() {
   const [direction, setDirection] = useState('Алматы');
@@ -195,7 +195,7 @@ export default function RidesScreen() {
       <Animatable.View
         key={direction}
         animation={animation}
-        duration={400}
+        duration={300}
         useNativeDriver
         className="px-4" 
       >

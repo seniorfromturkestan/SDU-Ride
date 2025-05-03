@@ -7,13 +7,13 @@
     "icon": "./assets/images/sdurideIcon.png",
     "scheme": "sduride",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
         "UIStatusBarStyle": "UIStatusBarStyleLightContent"
       }
     },
+    
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/sduridebg.png",
@@ -26,6 +26,13 @@
       "favicon": "./assets/images/sduridebg.png"
     },
     "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Разрешите доступ к галерее для выбора аватара",
+          "cameraPermission": "Разрешите доступ к камере, если хотите сделать фото"
+        }
+      ],
       "expo-router",
       [
         "expo-splash-screen",
@@ -42,7 +49,6 @@
     "experiments": {
       "typedRoutes": true,
       "newArchEnabled": true
-
     }
   }
 }

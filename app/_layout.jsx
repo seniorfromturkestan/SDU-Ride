@@ -9,8 +9,8 @@ import { useRouter } from "expo-router";
 import { useFonts } from "expo-font";
 import Constants from 'expo-constants';
 import StartScreen from "@/components/StartScreen";
-
-
+import Toast from 'react-native-toast-message';
+import { toastConfig } from "../toast.config";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -49,31 +49,27 @@ export default function RootLayout() {
 
   if (!appReady) return null;
 
-  if (!verified) {
-    return (
-      <StartScreen
-        setLanguage={setLanguage}
-        // setGmail={setGmail}
-        setVerified={setVerified}
-      />
-    );
-  }
-
   
-
-  const { API_URL } = Constants.expoConfig.extra;
-
-  console.log("API_URL:", API_URL);
-
-
   return (
     <ThemeProvider value={DefaultTheme}>
       <View className="flex-1 relative">
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="+not-found" />
-        </Stack>
+        {!verified ? (
+          <StartScreen
+            setLanguage={setLanguage}
+            setGmail={setGmail}
+            setVerified={setVerified}
+          />
+        ) : (
+          <Stack>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="+not-found" />
+          </Stack>
+        )}
+        <Toast config={toastConfig} />
       </View>
     </ThemeProvider>
   );
+  
 }
+
+

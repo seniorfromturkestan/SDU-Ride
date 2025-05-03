@@ -14,6 +14,9 @@ module.exports = {
       fontFamily: {
         Montserrat: ["Montserrat", "sans-serif"], 
       },
+      spacing: {
+        '72': '18rem', 
+      },
     },
   },
   plugins: [],

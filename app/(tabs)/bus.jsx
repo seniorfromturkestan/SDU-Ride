@@ -1,22 +1,23 @@
-import React, { useLayoutEffect, useState } from 'react';
-import { View, Text, TextInput, FlatList, TouchableOpacity, Image } from 'react-native';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
+import { View, Text, TextInput, FlatList, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 import { Search, X } from 'lucide-react-native';
 import { useNavigation } from 'expo-router';
 import CustomText from '@/components/CustomText';
 import { StyleSheet } from 'react-native';
 import * as Haptics from 'expo-haptics';
+import { fetchSchedule } from '../../api/route service/route.api';
 
 
 
 const busRoutes = [
-  { id: '230', name: 'Маршрут 230', destination: 'Конечная - Сайран' },
-  { id: '257', name: 'Маршрут 257', destination: 'Конечная - проспект Саина' },
-  { id: 'sdu1', name: 'Маршрут SDU 01', destination: 'Конечная - улица Төле би' },
-  { id: '457', name: 'Маршрут 457', destination: 'Конечная - Колос' },
-  { id: 'sdu2', name: 'Маршрут SDU 02', destination: 'Конечная - улица Төле би' },
-  { id: 'sdu3', name: 'Маршрут SDU 03', destination: 'Конечная - улица Төле би' },
-  { id: '202', name: 'Маршрут 202', destination: 'Конечная - улица Б.Момышұлы' },
-  { id: '459', name: 'Маршрут 459', destination: 'Конечная - Сайран' },
+  { id: '230', name: 'Маршрут 230', destination: 'Qaskelen - проспект Саина' },
+  { id: '257', name: 'Маршрут 257', destination: 'Qaskelen - Жібек жолы' },
+  { id: 'sdu1', name: 'Маршрут SDU 01', destination: 'SDU University - улица Төле би' },
+  { id: 'sdu2', name: 'Маршрут SDU 02', destination: 'SDU University - улица Б.Момышұлы' },
+  { id: 'sdu3', name: 'Маршрут SDU 03', destination: 'SDU University - проспект Абая' },
+  { id: 'sdu4', name: 'Маршрут SDU 04', destination: 'SDU University - Сайран' },
+  { id: 'sdu5', name: 'Маршрут SDU 05', destination: 'SDU University - проспект Саина' },
+
 ];
 
 const icons = {
@@ -26,6 +27,10 @@ const icons = {
 
 export default function TabTwoScreen() {
   const navigation = useNavigation();
+  const [search, setSearch] = useState('');
+  const [selectedId, setSelectedId] = useState(null);
+  const [schedule, setSchedule] = useState([]);
+  const [loading, setLoading] = useState(true);
 
 
   useLayoutEffect(() => {
@@ -43,14 +48,33 @@ export default function TabTwoScreen() {
       },
     });
   }, [navigation]);
-  const [search, setSearch] = useState('');
-  const [selectedId, setSelectedId] = useState(null);
+
 
   const filteredRoutes = busRoutes.filter((route) =>
     route.name.toLowerCase().includes(search.toLowerCase())
   );
 
 
+
+  useEffect(() => {
+    const getScheduleData = async () => {
+      const data = await fetchSchedule();
+      setSchedule(data);
+      setLoading(false);
+    };
+    
+    getScheduleData();
+  }, []);
+
+
+
+  if (loading) {
+    return (
+      <View className="flex-1 justify-center items-center">
+        <ActivityIndicator size="large" color="#4B6A9E" />
+      </View>
+    );
+  }
   return (
     <View style={styles.container}>
       <View className="flex-row items-center bg-gray-100 rounded-xl px-4 py-3">
@@ -110,6 +134,9 @@ export default function TabTwoScreen() {
             className="bg-[#716DAA] absolute left-4 right-4 bottom-28 py-4 rounded-[20] items-center"
             style={styles.shadowButton}
             onPress={() => {
+              navigation.navigate('my-maps')
+            
+
               // navigation.navigate('busdetails', { busId: selectedId });
               // Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
             }}
