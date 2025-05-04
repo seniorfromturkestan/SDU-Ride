@@ -6,19 +6,9 @@ import CustomText from '@/components/CustomText';
 import { StyleSheet } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { fetchSchedule } from '../../api/route service/route.api';
+import busRoutes from '../../busRoutes.json'; 
+import LottieView from 'lottie-react-native';
 
-
-
-const busRoutes = [
-  { id: '230', name: 'Маршрут 230', destination: 'Qaskelen - проспект Саина' },
-  { id: '257', name: 'Маршрут 257', destination: 'Qaskelen - Жібек жолы' },
-  { id: 'sdu1', name: 'Маршрут SDU 01', destination: 'SDU University - улица Төле би' },
-  { id: 'sdu2', name: 'Маршрут SDU 02', destination: 'SDU University - улица Б.Момышұлы' },
-  { id: 'sdu3', name: 'Маршрут SDU 03', destination: 'SDU University - проспект Абая' },
-  { id: 'sdu4', name: 'Маршрут SDU 04', destination: 'SDU University - Сайран' },
-  { id: 'sdu5', name: 'Маршрут SDU 05', destination: 'SDU University - проспект Саина' },
-
-];
 
 const icons = {
   bus: require('@/assets/images/bus.png'),
@@ -54,8 +44,6 @@ export default function TabTwoScreen() {
     route.name.toLowerCase().includes(search.toLowerCase())
   );
 
-
-
   useEffect(() => {
     const getScheduleData = async () => {
       const data = await fetchSchedule();
@@ -70,8 +58,14 @@ export default function TabTwoScreen() {
 
   if (loading) {
     return (
-      <View className="flex-1 justify-center items-center">
-        <ActivityIndicator size="large" color="#4B6A9E" />
+      <View className="flex-1 justify-center items-center ">
+        <LottieView
+          source={require('@/assets/animations/animation2.json')}
+          autoPlay
+          loop
+          style={{ width: 150, height: 150, marginBottom: 120 }}
+        />
+       
       </View>
     );
   }

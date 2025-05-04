@@ -1,0 +1,51 @@
+[
+  {
+    "id": "sdu1",
+    "name": "Маршрут SDU 101",
+    "gosnomer": "111XXX08",
+    "destination": "SDU University - улица Төле би",
+    "price": 150
+  },
+  {
+    "id": "sdu2",
+    "name": "Маршрут SDU 102",
+    "gosnomer": "222XXX13",
+    "destination": "SDU University - улица Б.Момышұлы",
+    "price": 150
+  },
+  {
+    "id": "sdu3",
+    "name": "Маршрут SDU 103",
+    "gosnomer": "333XXX04",
+    "destination": "SDU University - проспект Абая",
+    "price": 150
+  },
+  {
+    "id": "sdu4",
+    "name": "Маршрут SDU 201",
+    "gosnomer": "555XXX07",
+    "destination": "SDU University - Сайран",
+    "price": 200
+  },
+  {
+    "id": "sdu5",
+    "name": "Маршрут SDU 202",
+    "gosnomer": "667WWS13",
+    "destination": "SDU University - проспект Саина",
+    "price": 200
+  },
+  {
+    "id": "sdu6",
+    "name": "Маршрут SDU 303",
+    "gosnomer": "222XXX02",
+    "destination": "Qaskelen - проспект Саина",
+    "price": 250
+  },
+  {
+    "id": "sdu7",
+    "name": "Маршрут SDU 404",
+    "gosnomer": "111XXX01",
+    "destination": "Qaskelen - Жібек жолы",
+    "price": 250
+  }
+]

@@ -16,6 +16,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import BalanceModalButton from '@/components/BalanceModal';
 import { useNavigation } from 'expo-router';
 
+
 const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
 const { width } = Dimensions.get('window');
 
@@ -79,13 +80,7 @@ const HomeScreen = () => {
     });
   };
   
-  useEffect(() => {
-    if (isMenuVisible) {
-      StatusBar.setBarStyle('dark-content');
-    } else {
-      StatusBar.setBarStyle('light-content');
-    }
-  }, [isMenuVisible]);
+  
 
   useEffect(() => {
     startAnimation();
@@ -238,7 +233,18 @@ const HomeScreen = () => {
           { icon: icons.ticket, label: "Мои билеты" },
           { icon: icons.history, label: "История поездок" },
         ].map((item, index) => (
-          <TouchableOpacity key={index} className="mx-4 mt-3 bg-white rounded-[20] p-4 shadow-custom">
+          <TouchableOpacity key={index}
+            onPress={
+              () => {
+                if (item.label === "История поездок") {
+                  navigation.navigate('my-trips');
+                } else if (item.label === "Мои билеты") {
+                  navigation.navigate('my-tickets');
+                }
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              }
+            }
+           className="mx-4 mt-3 bg-white rounded-[20] p-4 shadow-custom">
             <View className="flex-row items-center">
                 <Image source={item.icon} className="w-9 h-9 mr-3" resizeMode="contain" />
               <CustomText className="text-xl">{item.label}</CustomText>
@@ -254,18 +260,26 @@ const HomeScreen = () => {
         </View>
 
           
-            <View className={`flex-row ${isSmallDevice ? 'gap-1' : 'gap-3'}`}>
-            {[
-              { icon: icons.bluetooth, label: "Bluetooth" },
-              { icon: icons.qr, label: "QR Code" },
-              { icon: icons.bus, label: "Гос.номер" },
-            ].map((item, index) => (
-              <TouchableOpacity key={index} className="flex-1 bg-white rounded-[20] p-4 items-center shadow-custom">
-                  <Image source={item.icon} className="w-10 h-8" resizeMode="contain" />
-                <CustomText className="text-lg mt-1">{item.label}</CustomText>
-              </TouchableOpacity>
-            ))}
-          </View>
+        <View className={`flex-row ${isSmallDevice ? 'gap-1' : 'gap-3'}`}>
+          {[
+            { icon: icons.bluetooth, label: "Bluetooth" },
+            { icon: icons.qr, label: "QR Code" },
+            { icon: icons.bus, label: "Гос.номер" },
+          ].map((item, index) => (
+            <TouchableOpacity 
+              key={index} 
+              className="flex-1 bg-white rounded-[20] p-4 items-center shadow-custom"
+              onPress={() => {
+                if (item.label === "Гос.номер") {
+                  navigation.navigate('paymentBus');
+                }
+              }}
+            >
+              <Image source={item.icon} className="w-10 h-8" resizeMode="contain" />
+              <CustomText className="text-lg mt-1">{item.label}</CustomText>
+            </TouchableOpacity>
+          ))}
+        </View>
         </View>
         
         <TouchableOpacity 

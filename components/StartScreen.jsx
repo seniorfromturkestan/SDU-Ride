@@ -111,7 +111,7 @@ const StartScreen = ({ setLanguage, setVerified }) => {
   className="absolute z-10 top-[7%] left-5"
 >
   <TouchableOpacity
-    className="bg-[#716DAA] rounded-lg"
+    className="bg-[#716DAA] rounded-lg z-0"
     onPress={() => {
       if (showRegister) {
         setShowRegister(false);

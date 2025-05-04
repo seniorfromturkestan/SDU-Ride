@@ -72,7 +72,7 @@ export default function Profile() {
       isMounted = false;
       controller.abort();
     };
-  }, []); // Удалил updateState из зависимостей
+  }, [updateState]); // Удалил updateState из зависимостей
 
   useEffect(() => {
     navigation.setOptions({

@@ -14,6 +14,7 @@ import { Entypo } from '@expo/vector-icons';
 import bgHistory from '../assets/images/bghistory.png';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ru';
+import LottieView from 'lottie-react-native';
 dayjs.locale('ru');
 
 export default function TopUpHistoryScreen() {
@@ -55,9 +56,15 @@ export default function TopUpHistoryScreen() {
 
   if (loading) {
     return (
-      <View className="flex-1 justify-center items-center">
-        <ActivityIndicator size="large" />
-      </View>
+      <View className="flex-1 justify-center items-center ">
+        <LottieView
+          source={require('@/assets/animations/animation2.json')}
+          autoPlay
+          loop
+          style={{ width: 150, height: 150, marginBottom: 120 }}
+        />
+     
+    </View>
     );
   }
 
@@ -87,12 +94,12 @@ export default function TopUpHistoryScreen() {
             return (
               <View
                 key={item.id}
-                className="mb-4 p-4 bg-white rounded-2xl shadow-sm border border-gray-200"
+                className="mb-4 p-4 bg-white rounded-2xl shadow-custom"
                 style={{
                   shadowColor: '#000',
-                  shadowOffset: { width: 0, height: 2 },
+                  shadowOffset: { width: 2, height: 4 },
                   shadowOpacity: 0.1,
-                  shadowRadius: 4,
+                  shadowRadius: 3,
                   elevation: 2,
                 }}
               >

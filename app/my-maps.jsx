@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, Dimensions, Image, Pressable, TouchableOpacity } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { View, StyleSheet, Dimensions, Image, Pressable, TouchableOpacity } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { useNavigation } from 'expo-router';
 import { Entypo } from '@expo/vector-icons';
@@ -8,8 +8,9 @@ import CustomText from '@/components/CustomText';
 const { width, height } = Dimensions.get('window');
 
 const Maps = () => {
-  const apiKey = '56b799c9-048e-4713-a7bb-150cad82d060'; // Ваш API ключ Yandex Maps
+  const apiKey = '56b799c9-048e-4713-a7bb-150cad82d060';
   const navigation = useNavigation();
+  const mapWebView = useRef(null);
 
   const icons = {
     bus: require('@/assets/images/bus.png'),
@@ -29,16 +30,15 @@ const Maps = () => {
         paddingBottom: 10,
       },
       headerLeft: () => (
-        <Pressable onPress={() => navigation.goBack()} >
+        <Pressable onPress={() => navigation.goBack()}>
           <TouchableOpacity className='bg-white rounded-lg' onPress={() => navigation.goBack()}>
-              <Entypo name="chevron-left" size={22} color="#716DAA"/>
+            <Entypo name="chevron-left" size={22} color="#716DAA" />
           </TouchableOpacity>
         </Pressable>
       ),
     });
   }, [navigation]);
 
-  // HTML контент с кастомным JavaScript для управления картой
   const mapHtml = `
     <!DOCTYPE html>
     <html lang="ru">
@@ -72,10 +72,14 @@ const Maps = () => {
           // Добавляем маркеры для Сайрана и Университета SDU с текстами
           var startPlacemark = new ymaps.Placemark([43.238949, 76.89846], {
             balloonContent: 'Это Сайран'
+          }, {
+            interactive: false
           });
 
           var endPlacemark = new ymaps.Placemark([43.207157, 76.668767], {
             balloonContent: 'Это Университет SDU'
+          }, {
+            interactive: false
           });
 
           // Добавляем маркеры на карту
@@ -98,24 +102,44 @@ const Maps = () => {
           // Добавляем маршрут на карту
           myMap.geoObjects.add(multiRoute);
 
-          // Программно скрываем элементы управления
-          myMap.controls.remove('searchControl'); // Убираем строку поиска
-          myMap.controls.remove('zoomControl');   // Убираем кнопки зума
-          myMap.controls.remove('trafficControl'); // Убираем трафик
-          myMap.controls.remove('typeSelector'); // Убираем типы карты
-          myMap.controls.remove('fullscreenControl'); // Убираем кнопку полноэкранного режима
-          myMap.controls.remove('routeButtonControl'); // Убираем кнопку "Как добраться"
-          myMap.controls.remove('geolocationControl'); // Убираем кнопку геолокации
-          myMap.controls.remove('rulerControl'); // Убираем измеритель
+          // Программно скрываем все элементы управления
+          myMap.controls.remove('searchControl');
+          myMap.controls.remove('zoomControl');
+          myMap.controls.remove('trafficControl');
+          myMap.controls.remove('typeSelector');
+          myMap.controls.remove('fullscreenControl');
+          myMap.controls.remove('routeButtonControl');
+          myMap.controls.remove('geolocationControl');
+          myMap.controls.remove('rulerControl');
+          
+          // Экспортируем объект карты в WebView для управления
+          window.myMap = myMap;
         });
       </script>
     </body>
     </html>
   `;
 
+  const zoomIn = () => {
+    if (mapWebView.current) {
+      mapWebView.current.injectJavaScript(`
+        window.myMap.setZoom(window.myMap.getZoom() + 1);
+      `);
+    }
+  };
+
+  const zoomOut = () => {
+    if (mapWebView.current) {
+      mapWebView.current.injectJavaScript(`
+        window.myMap.setZoom(window.myMap.getZoom() - 1);
+      `);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <WebView
+        ref={mapWebView}
         originWhitelist={['*']}
         source={{ html: mapHtml }}
         style={styles.map}
@@ -123,10 +147,23 @@ const Maps = () => {
         domStorageEnabled={true}
         mixedContentMode="always"
       />
-      <View style={styles.infoContainer}>
-        <Image source={icons.bus} style={styles.busIcon} resizeMode="contain" />
-        <CustomText style={styles.routeText}>Маршрут 230</CustomText>
-        <CustomText style={styles.destinationText}>Сайран - Университет SDU</CustomText>
+      <View style={styles.infoContainer} className='flex-row'>
+        <View style={styles.iconContainer} >
+          <Image source={icons.bus} style={styles.busIcon} resizeMode="contain" />
+        </View>
+        <View>
+          <CustomText style={styles.routeText}>Маршрут SDU 01</CustomText>
+          <CustomText style={styles.destinationText}>Сайран - Университет SDU</CustomText>
+        </View>
+      </View>
+      
+      <View style={styles.zoomControls}>
+        <Pressable onPress={zoomIn} style={styles.zoomButton}>
+          <CustomText style={styles.zoomText}>+</CustomText>
+        </Pressable>
+        <Pressable onPress={zoomOut} style={styles.zoomButton}>
+          <CustomText style={styles.zoomText}>-</CustomText>
+        </Pressable>
       </View>
     </View>
   );
@@ -146,9 +183,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     backgroundColor: '#fff',
-    padding: 15,
+    padding: 40,
+    paddingTop: 20,
+    paddingBottom: 70,
     width: width,
-    alignItems: 'center',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     shadowColor: '#000',
@@ -156,18 +194,52 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 5,
   },
+  iconContainer: {
+    marginBottom: 10,  
+  },
   busIcon: {
-    width: 50,
-    height: 50,
+    width: 40,
+    height: 40,
+    marginTop: 5,
+    marginLeft: -20,
   },
   routeText: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginTop: 10,
+    marginTop: 5,
+    marginLeft: 20,
   },
   destinationText: {
     fontSize: 14,
     color: '#555',
+    marginLeft: 20,
+
+  },
+  zoomControls: {
+    position: 'absolute',
+    bottom: '50%',
+    right: 10,
+    flexDirection: 'column',
+    alignItems: 'center',
+
+  },
+  zoomButton: {
+    backgroundColor: "white",
+    borderRadius: 10,
+    marginBottom: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 40,
+    height: 40,
+  },
+  zoomText: {
+    fontSize: 30,
+    color: '#716DAA',
   },
 });
 

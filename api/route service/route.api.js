@@ -1,4 +1,6 @@
 import Constants from 'expo-constants';
+import axios from 'axios';
+
 
 const { API_URL3 } = Constants.expoConfig.extra;
 
@@ -12,3 +14,13 @@ export const fetchSchedule = async () => {
       return [];
     }
   };
+
+export const getBusSchedule = async () => {
+  try {
+    const response = await axios.get(`${API_URL3}/get-schedule`);  
+    return response.data; 
+  } catch (error) {
+    console.error('Error fetching bus schedule:', error);
+    throw error;  
+  }
+};

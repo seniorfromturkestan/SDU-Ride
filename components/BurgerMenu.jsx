@@ -67,7 +67,7 @@ const BurgerMenu = ({ isVisible, onClose, activeItem = '' }) => {
   if (!isVisible && fadeAnim.__getValue() === 0) return null;
 
   const menuItems = [
-    { label: 'Расписание', screen: 'ScheduleScreen' },
+    { label: 'Расписание', screen: '/schedule' },
     { label: 'Новости SDU', screen: 'NewsScreen' },
     { label: 'Обращение', screen: 'FeedbackScreen' },
     { label: 'Контакт-центр', screen: 'ContactScreen' },
@@ -127,12 +127,7 @@ const BurgerMenu = ({ isVisible, onClose, activeItem = '' }) => {
             {item.label}
           </Text>
         </TouchableOpacity>
-      ))}
-
-
-
-
-      
+      ))}      
     </Animated.View>
   );
 };
