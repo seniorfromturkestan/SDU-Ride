@@ -12,6 +12,7 @@ import StartScreen from "@/components/StartScreen";
 import Toast from 'react-native-toast-message';
 import { toastConfig } from "../toast.config";
 
+
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {

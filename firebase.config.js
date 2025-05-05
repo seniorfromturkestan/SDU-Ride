@@ -11,7 +11,7 @@ const firebaseConfig = {
     appId: Constants.expoConfig.extra.FIREBASE_APP_ID,
     measurementId: Constants.expoConfig.extra.FIREBASE_MEASUREMENT_ID,
     
-  };
+};
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);

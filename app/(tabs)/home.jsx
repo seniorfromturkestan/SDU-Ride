@@ -15,6 +15,12 @@ import { getBalance } from '../../api/wallet service/wallet.api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BalanceModalButton from '@/components/BalanceModal';
 import { useNavigation } from 'expo-router';
+import * as Notifications from 'expo-notifications';
+import Constants from 'expo-constants';
+import registerNNPushToken from 'native-notify';
+import { collection, getDocs, addDoc, updateDoc, doc, getDoc, arrayUnion, deleteDoc, setDoc } from 'firebase/firestore';
+import { db } from '../../firebase.config.js';
+import buses from '../../busRoutes.json';
 
 
 const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
@@ -43,6 +49,8 @@ const slides = [
 
 
 const HomeScreen = () => {
+  registerNNPushToken(29791, 'LDJJw4kjuJ4EL8WSeZ0rgC');
+
   const navigation = useNavigation();
   const [balance, setBalance] = useState(0);
   const [isMenuVisible, setMenuVisible] = useState(false);
@@ -50,6 +58,9 @@ const HomeScreen = () => {
   const [isLoading, setLoading] = useState(true); 
   const [refreshing, setRefreshing] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [expoPushToken, setExpoPushToken] = useState(null);
+  
+
 
 
 
@@ -129,9 +140,102 @@ const HomeScreen = () => {
     setBalance(data.balance);
     setRefreshing(false);
   };
+
+
+
+  let currentBusIndex = 0;
+
+const sendPushNotification = async ({ title, body }) => {
+  try {
+    const response = await fetch('https://app.nativenotify.com/api/notification', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        appId: 29791,
+        appToken: "LDJJw4kjuJ4EL8WSeZ0rgC",
+        title,
+        body
+      })
+    });
+    const result = await response.text();
+    console.log('Уведомление отправлено:', result);
+  } catch (error) {
+    console.error('Ошибка отправки уведомления:', error);
+  }
+};
+
+const handleWaitBusClick = async () => {
+  const studentId = '210103' + Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+
+  await sendPushNotification({
+    title: "SDU Ride",
+    body: `Вы добавлены в список ожидания.`
+  });
+
+  const groupsRef = collection(db, 'waitingGroups');
+  const groupsSnap = await getDocs(groupsRef);
+
+  let activeGroup = null;
+
+  groupsSnap.forEach(docSnap => {
+    const data = docSnap.data();
+    if (data.passengers && data.passengers.length < 6 && !activeGroup) {
+      activeGroup = { id: docSnap.id, ...data };
+    }
+  });
+
+  if (!activeGroup) {
+    const bus = buses[currentBusIndex % buses.length];
+    const groupId = bus.name;
   
+    const groupDocRef = doc(db, 'waitingGroups', groupId);
+    await setDoc(groupDocRef, {
+      busId: bus.id, 
+      busName: bus.name,
+      busGos: bus.gosnomer,
+      passengers: []
+    });
+  
+    activeGroup = {
+      id: groupId,
+      busId: bus.id,
+      passengers: []
+    };
+  
+    currentBusIndex++;
+  }
   
 
+  const groupDocRef = doc(db, 'waitingGroups', activeGroup.id);
+  await updateDoc(groupDocRef, {
+    passengers: arrayUnion({
+      studentId,
+      timestamp: Date.now()
+    })
+  });
+
+  await new Promise(resolve => setTimeout(resolve, 300));
+
+  const updatedSnap = await getDoc(groupDocRef);
+  const updatedData = updatedSnap.data();
+
+  console.log('👥 Пассажиров:', updatedData.passengers?.length);
+
+  if (updatedData.passengers?.length >= 4) {
+    const bus = buses.find(b => b.id === updatedData.busId);
+    console.log('Достигнут лимит! Отправляю уведомление...');
+
+    await sendPushNotification({
+      title: 'SDU Ride',
+      body: `Автобус ${bus.name} выехал!`
+    });
+
+    await deleteDoc(groupDocRef);
+    console.log(`🗑️ Группа ${activeGroup.id} удалена после отправки`);
+  }
+
+  console.log(`${studentId} добавлен в группу ${activeGroup.id}`);
+};
 
 
   return (
@@ -273,6 +377,7 @@ const HomeScreen = () => {
                 if (item.label === "Гос.номер") {
                   navigation.navigate('paymentBus');
                 }
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
               }}
             >
               <Image source={item.icon} className="w-10 h-8" resizeMode="contain" />
@@ -282,12 +387,12 @@ const HomeScreen = () => {
         </View>
         </View>
         
-        <TouchableOpacity 
-          className={`mx-4 mt-6 mb-4 bg-[#716DAA] rounded-[20] p-4 items-center`}
-          style={styles.shadowButton}
+        <TouchableOpacity
+          className="mx-4 mt-6 mb-4 bg-[#716DAA] rounded-[20] p-4 items-center"
+          onPress={handleWaitBusClick}
         >
-          <CustomText className='text-white text-2xl font-bold'>жду автобус</CustomText>
-        </TouchableOpacity>
+        <CustomText className="text-white text-2xl font-bold">жду автобус</CustomText>
+      </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
     

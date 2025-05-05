@@ -24,3 +24,20 @@ export const getBusSchedule = async () => {
     throw error;  
   }
 };
+
+
+export const getRouteStops = async () => {
+  try {
+    const response = await fetch(`${API_URL3}/get-stops`);
+    if (!response.ok) {
+      throw new Error(`Ошибка запроса: ${response.status}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Ошибка при получении остановок:', error);
+    return [];
+  }
+};
+
+
