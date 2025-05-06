@@ -11,6 +11,7 @@ import Constants from 'expo-constants';
 import StartScreen from "@/components/StartScreen";
 import Toast from 'react-native-toast-message';
 import { toastConfig } from "../toast.config";
+import { AppContext } from '@/context/AppContext.jsx';
 
 
 SplashScreen.preventAutoHideAsync();
@@ -53,21 +54,23 @@ export default function RootLayout() {
   
   return (
     <ThemeProvider value={DefaultTheme}>
-      <View className="flex-1 relative">
-        {!verified ? (
-          <StartScreen
-            setLanguage={setLanguage}
-            setGmail={setGmail}
-            setVerified={setVerified}
-          />
-        ) : (
-          <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="+not-found" />
-          </Stack>
-        )}
-        <Toast config={toastConfig} />
-      </View>
+      <AppContext.Provider value={{ verified, setVerified }}>
+        <View className="flex-1 relative">
+          {!verified ? (
+            <StartScreen
+              setLanguage={setLanguage}
+              setGmail={setGmail}
+              setVerified={setVerified}
+            />
+          ) : (
+            <Stack>
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen name="+not-found" />
+            </Stack>
+          )}
+          <Toast config={toastConfig} />
+        </View>
+      </AppContext.Provider>
     </ThemeProvider>
   );
   

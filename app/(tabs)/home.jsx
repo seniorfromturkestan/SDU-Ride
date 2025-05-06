@@ -377,6 +377,12 @@ const handleWaitBusClick = async () => {
                 if (item.label === "Гос.номер") {
                   navigation.navigate('paymentBus');
                 }
+                // if (item.label === "QR Code") {
+                //   navigation.navigate('qrcode');
+                // }
+                if (item.label === "Bluetooth") {
+                  navigation.navigate('bluetooth');
+                }
                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
               }}
             >

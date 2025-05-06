@@ -20,8 +20,15 @@ const Option = ({
   onToggle,
   className = '',
   iconClassName = '',
+  onPress,
 }) => (
-  <TouchableOpacity className={`flex-row items-center justify-between px-2 py-3 border-b border-gray-200 last:border-b-0 ${className}`}>
+  <TouchableOpacity
+    onPress={onPress}
+    activeOpacity={0.7}
+    testID="option-button"
+    accessibilityLabel={text}
+    accessibilityRole="button"
+   className={`flex-row items-center justify-between px-2 py-3 border-b border-gray-200 last:border-b-0 ${className}`}>
     <View className="flex-row items-center">
       <Image source={icons[icon]} className={`w-9 h-9 mr-4 ${iconClassName}`} />
       <CustomText className="text-lg">{text}</CustomText>

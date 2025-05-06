@@ -58,7 +58,7 @@ const StartScreen = ({ setLanguage, setVerified }) => {
               useNativeDriver: true,
             }),
           ]).start();
-        }, 1000);
+        }, 3000);
   
         return () => clearTimeout(timer);
       }

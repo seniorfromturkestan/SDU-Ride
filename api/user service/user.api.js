@@ -41,19 +41,22 @@ export const registerUser = async (name, student_id) => {
 };
 
 
-export const updateProfile = async (student_id, name, avatarUri) => {
+export const updateProfile = async (student_id, name, avatarUri, phone) => {
   const formData = new FormData();
-  
+
   formData.append('name', name);
   formData.append('student_id', student_id);
-  
+  formData.append('phone', phone); 
+
+  if (avatarUri && avatarUri.startsWith('data:image')) {
+    const base64Data = avatarUri.split(',')[1];
 
     formData.append('avatar', {
-      uri: avatarUri,
+      uri: `data:image/jpeg;base64,${base64Data}`,
       type: 'image/jpeg',
       name: 'avatar.jpg',
     });
-  
+  }
 
   try {
     const res = await fetch(`${API_URL}/update-profile`, {
@@ -66,7 +69,7 @@ export const updateProfile = async (student_id, name, avatarUri) => {
     });
 
     const result = await res.json();
-    
+
     if (!res.ok) {
       throw new Error(result.message || 'Не удалось обновить профиль');
     }

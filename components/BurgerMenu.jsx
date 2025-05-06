@@ -68,10 +68,10 @@ const BurgerMenu = ({ isVisible, onClose, activeItem = '' }) => {
 
   const menuItems = [
     { label: 'Расписание', screen: '/schedule' },
-    { label: 'Новости SDU', screen: 'NewsScreen' },
-    { label: 'Обращение', screen: 'FeedbackScreen' },
-    { label: 'Контакт-центр', screen: 'ContactScreen' },
-    { label: 'О приложении', screen: 'AboutScreen' },
+    { label: 'Новости SDU', screen: '/news' },
+    { label: 'Обращение', screen: '/reports' },
+    { label: 'Контакт-центр', screen: '/contacts' },
+    { label: 'О приложении', screen: '/aboutus' },
     { label: 'Админ-панель', screen: '/admin-slides' },
   ];
 

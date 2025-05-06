@@ -9,29 +9,42 @@ import ProfileHeader from '@/components/ProfileHeader';
 import ProfileEditorModal from '@/components/ProfileEditorModal';
 import { fetchProfileName, updateProfile } from '../../api/user service/user.api';
 import Toast from 'react-native-toast-message';
+import { useRouter } from 'expo-router';
+import { Linking } from 'react-native';
+import { useAppContext } from '@/context/AppContext';
+
+
 
 const { height } = Dimensions.get('window');
 
 export default function Profile() {
+  const { setVerified } = useAppContext();
+
   const navigation = useNavigation();
-  const shift = useRef(new Animated.Value(height)).current;
-  const [state, setState] = useState({
+  const router = useRouter();
+  const shift = useRef(new Animated.Value(100)).current;
+  const opacity = useRef(new Animated.Value(0)).current;
+    const [state, setState] = useState({
     notificationsEnabled: false,
     permissionGranted: false,
     profileName: '',
     avatar: null,
     id: null,
     newName: '',
+    phone: '',             
     loading: false,
     bottomSheetVisible: false,
     tempAvatar: null,
-    tempName: ''
+    tempName: '',
+    tempPhone: ''    
+
   });
 
   // Простая функция обновления состояния
   const updateState = useCallback((patch) => {
     setState((prev) => ({ ...prev, ...patch }));
   }, []);
+
 
   useEffect(() => {
     const controller = new AbortController();
@@ -40,16 +53,21 @@ export default function Profile() {
     const loadProfile = async () => {
       try {
         const storedId = await AsyncStorage.getItem('student_id');
+        
         if (!isMounted) return;
         if (!storedId) {
           Alert.alert('Ошибка', 'ID не найден');
           return;
         }
         
-        const { name, avatar: avatarData } = await fetchProfileName(storedId, { signal: controller.signal });
+        const { name, avatar: avatarData, phone } = await fetchProfileName(storedId, { signal: controller.signal });
         if (!isMounted) return;
         
-        const avatarUri = avatarData ? `data:image/jpeg;base64,${avatarData}` : null;
+        const avatarUri = avatarData && avatarData.length > 40
+        ? { uri: `data:image/jpeg;base64,${avatarData}` }
+        : null;
+      
+  
         setState(prev => ({
           ...prev,
           id: storedId,
@@ -57,8 +75,11 @@ export default function Profile() {
           newName: name,
           tempName: name,
           avatar: avatarUri,
-          tempAvatar: avatarUri
+          tempAvatar: avatarUri,
+          phone: phone || '',
+          tempPhone: phone || ''
         }));
+        
       } catch (err) {
         if (isMounted && err.name !== 'AbortError') {
           Alert.alert('Ошибка', err.message || 'Не удалось загрузить профиль');
@@ -72,7 +93,7 @@ export default function Profile() {
       isMounted = false;
       controller.abort();
     };
-  }, [updateState]); // Удалил updateState из зависимостей
+  }, []);
 
   useEffect(() => {
     navigation.setOptions({
@@ -148,26 +169,42 @@ export default function Profile() {
       tempAvatar: prev.avatar
     }));
     
-    Animated.timing(shift, {
-      toValue: 0,
-      duration: 100,
-      useNativeDriver: true,
-      easing: Easing.out(Easing.ease),
-    }).start();
+    Animated.parallel([
+      Animated.timing(shift, {
+        toValue: 0,
+        duration: 250,
+        useNativeDriver: true,
+        easing: Easing.out(Easing.ease),
+      }),
+      Animated.timing(opacity, {
+        toValue: 1,
+        duration: 200,
+        useNativeDriver: true,
+      }),
+    ]).start();
+    
   }, [shift]);
 
   const closeBottomSheet = useCallback(() => {
-    Animated.timing(shift, {
-      toValue: height,
-      duration: 200,
-      useNativeDriver: true,
-      easing: Easing.out(Easing.ease),
-    }).start(() => {
+    Animated.parallel([
+      Animated.timing(shift, {
+        toValue: height,
+        duration: 200,
+        useNativeDriver: true,
+        easing: Easing.out(Easing.ease),
+      }),
+      Animated.timing(opacity, {
+        toValue: 0,
+        duration: 150,
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
       setState(prev => ({
         ...prev,
         bottomSheetVisible: false
       }));
     });
+    
   }, [shift]);
 
   const pickAvatar = useCallback(async () => {
@@ -177,54 +214,58 @@ export default function Profile() {
         Alert.alert('Доступ запрещён', 'Разрешите доступ к галерее в настройках');
         return;
       }
-      
+  
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ['images'],
         allowsEditing: true,
         aspect: [1, 1],
         quality: 0.8,
-        base64: true,
+        base64: true, 
       });
-      
+  
       if (!result.canceled && result.assets && result.assets.length > 0) {
+        const selected = result.assets[0];
+        const base64Uri = `data:image/jpeg;base64,${selected.base64}`;
+  
         setState(prev => ({
           ...prev,
-          tempAvatar: result.assets[0].uri
+          tempAvatar: base64Uri, 
         }));
       }
     } catch (error) {
       Alert.alert('Ошибка', 'Не удалось выбрать изображение');
     }
   }, []);
-
+  
   const handleUpdateProfile = useCallback(async () => {
-    const { tempName, id, tempAvatar } = state;
-    
+    const { tempName, tempPhone, id, tempAvatar } = state;
+  
     if (!tempName || !tempName.trim()) {
       Alert.alert('Ошибка', 'Имя не может быть пустым');
       return;
     }
-    
+  
     if (!id) {
       Alert.alert('Ошибка', 'ID пользователя не найден');
       return;
     }
-    
+  
     setState(prev => ({ ...prev, loading: true }));
     Keyboard.dismiss();
-    
+  
     try {
-      await updateProfile(id, tempName, tempAvatar);
-      
+      await updateProfile(id, tempName, tempAvatar, tempPhone);
+  
       setState(prev => ({
         ...prev,
         newName: tempName,
         profileName: tempName,
         avatar: tempAvatar,
+        phone: tempPhone,          
         loading: false,
         bottomSheetVisible: false
       }));
-      
+  
       Toast.show({
         type: 'success',
         text1: 'Успешно',
@@ -237,25 +278,38 @@ export default function Profile() {
       setState(prev => ({ ...prev, loading: false }));
     }
   }, [state]);
+  
 
-  const bottomSheetHeight = height / 1.75;
+
+  const bottomSheetHeight = height / 1.55;
 
   return (
     <ScrollView className="flex-1 bg-gray-100 px-4 py-4">
       <ProfileHeader 
-        avatar={state.avatar} 
+        avatar={state.avatar}
         profileName={state.profileName} 
         newName={state.newName} 
         onEdit={openBottomSheet} 
+        tempAvatar={state.tempAvatar}
+        state={state}
+       
       />
 
       <View className="bg-white rounded-[20] p-2 mb-4 shadow-custom">
-        <Option icon="settings" text="Настройки приложения" className='py-4'/>
+        
+      <Option
+        icon="settings"
+        text="Настройки приложения"
+        className="py-4"
+        onPress={() => router.push('/settings')} 
+      />
         <Option 
           icon="security" 
           text="Безопасность" 
           iconClassName='h-[38px]' 
           className='border-t py-4 border-[#716DAA]' 
+          onPress={() => router.push('/security')} 
+
         />
         <Option 
           icon="bell" 
@@ -269,15 +323,45 @@ export default function Profile() {
       </View>
 
       <View className="bg-white rounded-[20] p-2 py-1 mt-8 shadow-custom">
-        <Option icon="share" text="Поделиться с друзьями из SDU" />
-      </View>
+      <Option
+        icon="share"
+        text="Поделиться с друзьями из SDU"
+        onPress={() => Linking.openURL('https://sdu.edu.kz')}
+      />
+    </View>
 
-      <View className="bg-white rounded-[20] p-2 py-1 mt-4 shadow-custom">
-        <Option icon="exit" text="Выйти" />
-      </View>
+    <View className="bg-white rounded-[20] p-2 py-1 mt-4 shadow-custom">
+  <Option
+    icon="exit"
+    text="Выйти"
+    onPress={() => {
+      Alert.alert(
+        'Выход из приложения',
+        'Вы действительно хотите выйти?',
+        [
+          { text: 'Отмена', style: 'cancel' },
+          {
+            text: 'Выйти',
+            style: 'destructive',
+            onPress: async () => {
+              try {
+                await AsyncStorage.clear();
+                setVerified(false); 
+              } catch (error) {
+                console.error('Ошибка при выходе:', error);
+              }
+            }
+          },
+        ]
+      );
+    }}
+  />
+</View>
+
 
       <ProfileEditorModal
         visible={state.bottomSheetVisible}
+        onRequestClose={closeBottomSheet}
         onClose={closeBottomSheet}
         onPickAvatar={pickAvatar}
         onSave={handleUpdateProfile}
